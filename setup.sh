@@ -123,9 +123,11 @@ fi
 # 4. Start the Stack
 echo ""
 echo -e "\033[1;36m[4/4] Starting MYEVIEW Production Stack...\033[0m"
-echo "Building and starting Docker containers..."
+echo "Building and starting Docker containers (ignoring cache)..."
 
-docker compose up -d --build
+docker compose build --no-cache
+docker compose up -d
+
 
 echo ""
 echo -e "\033[1;34m=========================================================\033[0m"
