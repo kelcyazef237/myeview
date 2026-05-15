@@ -13,7 +13,8 @@ type Config struct {
 	DBPassword   string
 	DBName       string
 	DBSSLMode    string
-	OpenAIAPIKey string
+	LLMAPIKey    string // Resolved: DASHSCOPE_API_KEY → OPENAI_API_KEY
+	LLMProvider  string // "qwen" | "openai" | "none"
 }
 
 func LoadConfig() *Config {
@@ -28,15 +29,28 @@ func LoadConfig() *Config {
 
 	viper.AutomaticEnv()
 
+	// Resolve LLM provider: Qwen (DashScope) takes priority
+	llmKey := viper.GetString("DASHSCOPE_API_KEY")
+	llmProvider := "qwen"
+	if llmKey == "" {
+		llmKey = viper.GetString("OPENAI_API_KEY")
+		llmProvider = "openai"
+	}
+	if llmKey == "" {
+		llmProvider = "none"
+	}
+
 	return &Config{
-		Port:         viper.GetString("PORT"),
-		NatsURL:      viper.GetString("NATS_URL"),
-		DBHost:       viper.GetString("DB_HOST"),
-		DBPort:       viper.GetString("DB_PORT"),
-		DBUser:       viper.GetString("DB_USER"),
-		DBPassword:   viper.GetString("DB_PASSWORD"),
-		DBName:       viper.GetString("DB_NAME"),
-		DBSSLMode:    viper.GetString("DB_SSL_MODE"),
-		OpenAIAPIKey: viper.GetString("OPENAI_API_KEY"),
+		Port:        viper.GetString("PORT"),
+		NatsURL:     viper.GetString("NATS_URL"),
+		DBHost:      viper.GetString("DB_HOST"),
+		DBPort:      viper.GetString("DB_PORT"),
+		DBUser:      viper.GetString("DB_USER"),
+		DBPassword:  viper.GetString("DB_PASSWORD"),
+		DBName:      viper.GetString("DB_NAME"),
+		DBSSLMode:   viper.GetString("DB_SSL_MODE"),
+		LLMAPIKey:   llmKey,
+		LLMProvider: llmProvider,
 	}
 }
+

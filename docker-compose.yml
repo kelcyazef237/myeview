@@ -241,6 +241,8 @@ services:
       context: .
       dockerfile: services/compliance/Dockerfile
     container_name: myeview-compliance
+    env_file:
+      - .env
     environment:
       PORT: "8086"
       NATS_URL: nats://nats:4222
@@ -250,7 +252,8 @@ services:
       DB_PASSWORD: myeview_password
       DB_NAME: myeview
       DB_SSL_MODE: disable
-      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      DASHSCOPE_API_KEY: ${DASHSCOPE_API_KEY:-}   # Qwen/Alibaba Cloud (primary)
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}          # OpenAI fallback
     depends_on:
       postgres:
         condition: service_healthy

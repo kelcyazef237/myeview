@@ -49,8 +49,10 @@ func main() {
 	// Initialize Repository
 	compRepo := repository.NewComplianceRepository(database)
 
-	// Initialize Services
-	llmSvc := service.NewLLMService(cfg.OpenAIAPIKey)
+	// Initialize LLM Service (Qwen via DashScope, fallback to OpenAI, or noop)
+	llmSvc := service.NewLLMService(cfg.LLMAPIKey, cfg.LLMProvider)
+	log.Printf("[Compliance] LLM provider: %s", cfg.LLMProvider)
+
 	ingestSvc := service.NewIngestionService(compRepo, llmSvc)
 	gapSvc := service.NewGapAnalysisService(compRepo, llmSvc)
 
