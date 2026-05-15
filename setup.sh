@@ -37,26 +37,40 @@ echo -e "\033[1;36m[2/4] Checking system dependencies...\033[0m"
 install_docker() {
     echo "Docker not found. Attempting to install Docker..."
     if [ -x "$(command -v apt-get)" ]; then
-        sudo apt-get update
-        sudo apt-get install -y ca-certificates curl gnupg lsb-release
-        sudo install -m 0755 -d /etc/apt/keyrings
+        # 1. Clean up any previous broken attempts
+        sudo rm -f /etc/apt/sources.list.d/docker.list
         
-        # Detect OS and Codename
-        ID=$(. /etc/os-release && echo "$ID")
-        VERSION_CODENAME=$(. /etc/os-release && echo "$VERSION_CODENAME")
+        # 2. Detect OS and Codename
+        ID=$(grep -E '^ID=' /etc/os-release | cut -d= -f2 | tr -d '"')
+        VERSION_CODENAME=$(grep -E '^VERSION_CODENAME=' /etc/os-release | cut -d= -f2 | tr -d '"')
         
+        if [ -z "$VERSION_CODENAME" ]; then
+             VERSION_CODENAME=$(grep -E '^VERSION_ID=' /etc/os-release | cut -d= -f2 | tr -d '"')
+        fi
+
+        echo "Detected OS: $ID, Codename: $VERSION_CODENAME"
+
         # Docker repo path (debian or ubuntu)
         REPO_OS=$ID
-        if [ "$ID" = "debian" ]; then
-            # If Trixie (testing), fallback to Bookworm as Docker might not have Trixie repos yet
-            if [ "$VERSION_CODENAME" = "trixie" ]; then
+        if [ "$ID" = "debian" ] || [ "$ID" = "ubuntu" ]; then
+            if [ "$ID" = "debian" ] && [ "$VERSION_CODENAME" = "trixie" ]; then
                 echo "Detected Debian Trixie. Falling back to Bookworm for Docker repo..."
                 VERSION_CODENAME="bookworm"
             fi
+        else
+            # Fallback to debian if unknown but apt-based
+            REPO_OS="debian"
+            VERSION_CODENAME="bookworm"
         fi
 
-        curl -fsSL https://download.docker.com/linux/$REPO_OS/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        # 3. Now try update after cleaning
+        sudo apt-get update || true # Continue even if some repos fail
+        sudo apt-get install -y ca-certificates curl gnupg lsb-release
+
+        sudo install -m 0755 -d /etc/apt/keyrings
+        curl -fsSL https://download.docker.com/linux/$REPO_OS/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg || (echo "Failed to download GPG key"; exit 1)
         sudo chmod a+r /etc/apt/keyrings/docker.gpg
+        
         echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$REPO_OS $VERSION_CODENAME stable" | \
             sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
         
@@ -65,6 +79,7 @@ install_docker() {
         sudo usermod -aG docker $USER
         echo -e "\033[1;33m⚠️ Docker installed. You may need to log out and log back in for permissions to apply.\033[0m"
     else
+
 
         echo -e "\033[1;31m❌ Please install Docker manually: https://docs.docker.com/get-docker/\033[0m"
         exit 1
