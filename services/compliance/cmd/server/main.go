@@ -34,7 +34,12 @@ func main() {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	// Auto-migrate Compliance models (assuming pgvector extension exists)
+	// Ensure pgvector extension is enabled
+	if err := database.Exec("CREATE EXTENSION IF NOT EXISTS vector").Error; err != nil {
+		log.Fatalf("Failed to create vector extension: %v", err)
+	}
+
+	// Auto-migrate Compliance models
 	if err := database.AutoMigrate(&domain.Regulation{}, &domain.RegulationChunk{}, &domain.ComplianceGap{}); err != nil {
 		log.Fatalf("Failed to run migrations: %v", err)
 	}
