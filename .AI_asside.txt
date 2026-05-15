@@ -1,0 +1,97 @@
+  MYEVIEW Architecture Plan
+
+  1. Overall Architecture
+  MYEVIEW will be built as a distributed microservices platform, leveraging Domain-Driven Design (DDD). It will
+  consist of a React-based frontend interacting with an API Gateway (or direct exposed services) that routes to
+  various Go-based microservices. The services will communicate asynchronously via NATS JetStream for event-driven
+  workflows and synchronously via gRPC for high-performance internal calls.
+
+  2. Service Boundaries
+   - API Gateway / BFF (Backend for Frontend): Routes traffic, handles rate limiting, and normalizes responses for
+     the frontend.
+   - Identity & Access Management (IAM) Service: Handles authentication (JWT), RBAC, users, and tenants.
+   - Asset Discovery Service: Orchestrates passive intelligence gathering (crt.sh, Shodan, Censys, Wayback).
+   - Verification Engine Service: Validates discovered assets (SSL checks, Handshakes, DNS).
+   - Enrichment & Intelligence Service: Extracts metadata, fingerprints tech stacks, and aggregates third-party
+     intel.
+   - Risk & Scoring Service: Calculates exposure scores based on CVSS, business criticality, and asset state.
+   - Graph & Attack Path Service: Manages relationships between assets to compute attack chains.
+   - Compliance & RAG Service: Handles document chunking, embedding generation, LLM orchestration (MCP), and gap
+     analysis mapping.
+
+  3. Monorepo Structure
+  We will use standard Go Workspaces (go.work) for the backend and Turborepo for the frontend application.
+
+    1 /
+    2 ├── apps/
+    3 │   └── web/                # React/Vite/TypeScript frontend
+    4 ├── packages/
+    5 │   ├── ui/                 # Shared React components (shadcn, tailwind)
+    6 │   └── ts-config/          # Shared frontend config
+    7 ├── services/
+    8 │   ├── iam/                # Go Gin microservice
+    9 │   ├── discovery/          # Go Gin microservice
+   10 │   ├── verification/       # Go Gin microservice
+   11 │   ├── enrichment/         # Go Gin microservice
+   12 │   ├── scoring/            # Go Gin microservice
+   13 │   ├── graph/              # Go Gin microservice
+   14 │   └── compliance/         # Go Gin microservice
+   15 ├── libs/                   # Shared Go packages
+   16 │   ├── logger/             # Structured logging
+   17 │   ├── auth/               # JWT validation middlewares
+   18 │   ├── events/             # NATS wrappers
+   19 │   ├── db/                 # PostgreSQL config & utils
+   20 │   └── testutils/          # Test mocks and stubs
+   21 ├── docs/                   # Architectural Decision Records (ADRs) and OpenAPI
+   22 ├── scripts/                # CI/CD and local dev scripts
+   23 ├── docker-compose.yml
+   24 ├── go.work                 # Go workspace definition
+   25 └── package.json            # Root turborepo config
+
+  4. Database Strategy
+   - PostgreSQL: Primary relational store for IAM (users, roles), Asset inventory, Risk scores, and Compliance
+     mappings.
+   - Redis: Caching layer, rate-limiting counters, and ephemeral state (e.g., active discovery task status).
+   - OpenSearch/Elasticsearch: Full-text search across assets, intelligence logs, and raw discovery data.
+   - Graph Database: PostgreSQL recursive CTEs initially, migrating to a dedicated graph DB if needed for attack
+     paths.
+   - MinIO/S3: Object storage for ingested regulatory PDFs, scan artifacts, and report generation.
+   - Vector DB: PostgreSQL with the pgvector extension for storing embedded compliance regulations (RAG).
+
+  5. Event Architecture
+   - Broker: NATS JetStream.
+   - Pattern: Pub/Sub and Work Queues.
+   - Flow: 
+     1. Discovery Service publishes asset.discovered events.
+     2. Verification Engine consumes, performs checks, and publishes asset.verified.
+     3. Enrichment Service consumes verified assets, performs external lookups, and publishes asset.enriched.
+     4. Scoring Service recalculates risk upon enrichment events.
+
+  6. Authentication Architecture
+   - Protocol: OAuth2 / OIDC based flows using JWT.
+   - Tokens: Short-lived Access Tokens (JWT) + HTTP-Only Secure cookies for Refresh Tokens.
+   - Authorization: Role-Based Access Control (RBAC). IAM service issues JWTs with custom claims.
+   - Guards: Gin middleware in each service validates the JWT signature independently via a shared library.
+
+  7. Compliance/RAG Subsystem Architecture
+   - Ingestion: Users upload PDF regulations to MinIO.
+   - Processing: Go workers extract text, chunk it, and generate embeddings.
+   - Storage: Embeddings are stored in PostgreSQL (pgvector).
+   - Retrieval: LLM integration via MCP server to query vector context, map assets, and generate gap reports.
+
+  8. Frontend Architecture
+   - Framework: React, Vite, strict TypeScript.
+   - State Management: Zustand (global), React Query (server state caching).
+   - Styling: TailwindCSS, shadcn/ui, Framer Motion.
+   - Data Viz: Recharts or ECharts.
+   - Routing: React Router.
+
+  9. Development Roadmap
+   - Phase 1: Foundation: Monorepo, CI/CD, local infra, IAM, frontend scaffolding.
+   - Phase 2: Discovery & Verification: NATS pipelines, asset ingestion.
+   - Phase 3: Intelligence & Scoring: Third-party APIs, risk algorithms, OpenSearch.
+   - Phase 4: Attack Path Graph: Visualizing relationships.
+   - Phase 5: Compliance RAG: Embeddings, MCP, UI integration.
+   - Phase 6: Polish: E2E testing, UX, performance.
+
+

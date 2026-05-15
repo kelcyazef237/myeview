@@ -1,0 +1,44 @@
+# ── Secrets & Environment ──
+.env
+.env.local
+.env.production
+.censy
+*.pem
+*.key
+
+# ── Go ──
+/bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor/
+
+# ── Node / Frontend ──
+node_modules/
+dist/
+.vite/
+*.tsbuildinfo
+
+# ── IDE ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Docker ──
+docker-compose.override.yml
+
+# ── Logs ──
+*.log
+logs/
+
+# ── OS ──
+.DS_Store
+.Trash-*

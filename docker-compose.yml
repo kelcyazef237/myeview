@@ -1,0 +1,282 @@
+# MYEVIEW — Docker Compose (Development)
+# Usage: docker-compose up -d
+
+services:
+  # ── Infrastructure ──
+
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: myeview-postgres
+    environment:
+      POSTGRES_USER: myeview
+      POSTGRES_PASSWORD: myeview_password
+      POSTGRES_DB: myeview
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myeview"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - myeview-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: myeview-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - myeview-net
+
+  nats:
+    image: nats:2.10-alpine
+    container_name: myeview-nats
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    command: ["-js"]
+    networks:
+      - myeview-net
+
+  opensearch:
+    image: opensearchproject/opensearch:2.11.0
+    container_name: myeview-opensearch
+    environment:
+      - cluster.name=myeview-cluster
+      - node.name=myeview-node1
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - DISABLE_INSTALL_DEMO_CONFIG=true
+      - DISABLE_SECURITY_PLUGIN=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - "9200:9200"
+    networks:
+      - myeview-net
+
+  minio:
+    image: minio/minio:latest
+    container_name: myeview-minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: myeview_admin
+      MINIO_ROOT_PASSWORD: myeview_minio_password
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - myeview-net
+
+  # ── Application Services ──
+
+  iam:
+    build:
+      context: .
+      dockerfile: services/iam/Dockerfile
+    container_name: myeview-iam
+    ports:
+      - "8080:8080"
+    environment:
+      IAM_PORT: "8080"
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: myeview
+      DB_PASSWORD: myeview_password
+      DB_NAME: myeview
+      DB_SSL_MODE: disable
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      CORS_ORIGIN: http://localhost:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - myeview-net
+    restart: unless-stopped
+
+  discovery:
+    build:
+      context: .
+      dockerfile: services/discovery/Dockerfile
+    container_name: myeview-discovery
+    ports:
+      - "8081:8081"
+    env_file:
+      - .env
+    environment:
+      PORT: "8081"
+      NATS_URL: nats://nats:4222
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: myeview
+      DB_PASSWORD: myeview_password
+      DB_NAME: myeview
+      DB_SSL_MODE: disable
+      SHODAN_API_KEY: ${SHODAN_API_KEY:-}
+      CENSYS_API_ID: ${CENSYS_API_ID:-censys_NTmvNPQq}
+      CENSYS_SECRET: ${CENSYS_SECRET:-MZ5mXJWk2DExR4xoakFBUfdY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+    networks:
+      - myeview-net
+    restart: unless-stopped
+
+  verification:
+    build:
+      context: .
+      dockerfile: services/verification/Dockerfile
+    container_name: myeview-verification
+    environment:
+      PORT: "8082"
+      NATS_URL: nats://nats:4222
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: myeview
+      DB_PASSWORD: myeview_password
+      DB_NAME: myeview
+      DB_SSL_MODE: disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+    networks:
+      - myeview-net
+    restart: unless-stopped
+
+  enrichment:
+    build:
+      context: .
+      dockerfile: services/enrichment/Dockerfile
+    container_name: myeview-enrichment
+    environment:
+      PORT: "8083"
+      NATS_URL: nats://nats:4222
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: myeview
+      DB_PASSWORD: myeview_password
+      DB_NAME: myeview
+      DB_SSL_MODE: disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+    networks:
+      - myeview-net
+    restart: unless-stopped
+
+  scoring:
+    build:
+      context: .
+      dockerfile: services/scoring/Dockerfile
+    container_name: myeview-scoring
+    environment:
+      PORT: "8084"
+      NATS_URL: nats://nats:4222
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: myeview
+      DB_PASSWORD: myeview_password
+      DB_NAME: myeview
+      DB_SSL_MODE: disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+    networks:
+      - myeview-net
+    restart: unless-stopped
+
+  graph:
+    build:
+      context: .
+      dockerfile: services/graph/Dockerfile
+    container_name: myeview-graph
+    environment:
+      PORT: "8085"
+      NATS_URL: nats://nats:4222
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: myeview
+      DB_PASSWORD: myeview_password
+      DB_NAME: myeview
+      DB_SSL_MODE: disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+    networks:
+      - myeview-net
+    restart: unless-stopped
+
+  compliance:
+    build:
+      context: .
+      dockerfile: services/compliance/Dockerfile
+    container_name: myeview-compliance
+    environment:
+      PORT: "8086"
+      NATS_URL: nats://nats:4222
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: myeview
+      DB_PASSWORD: myeview_password
+      DB_NAME: myeview
+      DB_SSL_MODE: disable
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      nats:
+        condition: service_started
+    networks:
+      - myeview-net
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: myeview-web
+    ports:
+      - "3000:80"
+    depends_on:
+      - iam
+    networks:
+      - myeview-net
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  minio_data:
+
+networks:
+  myeview-net:
+    driver: bridge

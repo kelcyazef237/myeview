@@ -1,0 +1,10 @@
+{
+  "extends": "@myeview/ts-config/react.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src"]
+}

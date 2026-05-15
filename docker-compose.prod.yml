@@ -1,0 +1,64 @@
+# MYEVIEW — Docker Compose Production Overrides
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+services:
+  postgres:
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports: []  # Don't expose DB externally
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  redis:
+    ports: []  # Don't expose Redis externally
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  nats:
+    ports:
+      - "4222:4222"  # Keep internal only; remove 8222 monitoring
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+  opensearch:
+    ports: []  # Don't expose externally
+    environment:
+      - "OPENSEARCH_JAVA_OPTS=-Xms1g -Xmx1g"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+
+  minio:
+    ports: []  # Don't expose externally
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+
+  iam:
+    ports: []  # Only accessible via web proxy
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      DB_PASSWORD: ${DB_PASSWORD}
+      CORS_ORIGIN: ${CORS_ORIGIN:-https://myeview.example.com}
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    restart: always
+
+  web:
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 128M
