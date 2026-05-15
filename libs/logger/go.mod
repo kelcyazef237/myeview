@@ -1,6 +1,6 @@
 module github.com/myeview/myeview/libs/logger
 
-go 1.26.2
+go 1.22
 
 require (
 	github.com/bytedance/gopkg v0.1.4 // indirect

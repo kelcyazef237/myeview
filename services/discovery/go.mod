@@ -1,6 +1,6 @@
 module github.com/myeview/myeview/services/discovery
 
-go 1.22.0
+go 1.22
 
 require (
 	github.com/gin-gonic/gin v1.9.1

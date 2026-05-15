@@ -1,6 +1,6 @@
 module github.com/myeview/myeview/services/iam
 
-go 1.26.2
+go 1.22
 
 require (
 	github.com/gin-contrib/cors v1.7.7

@@ -1,3 +1,3 @@
 module github.com/myeview/myeview/services/scoring
 
-go 1.26.2
+go 1.22

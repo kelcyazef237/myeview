@@ -5,9 +5,11 @@ RUN apk add --no-cache git ca-certificates
 
 WORKDIR /app
 
-# Copy shared libraries first (for caching)
-COPY libs/logger/ ./libs/logger/
-COPY libs/auth/ ./libs/auth/
+# Copy workspace configuration
+COPY go.work go.work.sum ./
+
+# Copy shared libraries
+COPY libs/ ./libs/
 
 # Copy IAM service
 COPY services/iam/ ./services/iam/
@@ -15,6 +17,7 @@ COPY services/iam/ ./services/iam/
 # Build
 WORKDIR /app/services/iam
 RUN go mod download
+
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /iam-server ./cmd/server/
 
 # ── Stage 2: Runtime ──
