@@ -10,6 +10,7 @@ COPY libs/ ./libs/
 COPY services/verification/ ./services/verification/
 
 WORKDIR /app/services/verification
+    ENV GOWORK=off
 RUN go mod download
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /verification-server ./cmd/server/
 

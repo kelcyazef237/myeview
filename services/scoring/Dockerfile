@@ -10,6 +10,7 @@ COPY libs/ ./libs/
 COPY services/scoring/ ./services/scoring/
 
 WORKDIR /app/services/scoring
+    ENV GOWORK=off
 RUN go mod download
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /scoring-server ./cmd/server/
 

@@ -10,6 +10,7 @@ COPY libs/ ./libs/
 COPY services/graph/ ./services/graph/
 
 WORKDIR /app/services/graph
+    ENV GOWORK=off
 RUN go mod download
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /graph-server ./cmd/server/
 

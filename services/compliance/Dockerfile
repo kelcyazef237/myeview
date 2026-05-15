@@ -10,6 +10,7 @@ COPY libs/ ./libs/
 COPY services/compliance/ ./services/compliance/
 
 WORKDIR /app/services/compliance
+    ENV GOWORK=off
 RUN go mod download
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /compliance-server ./cmd/server/
 
