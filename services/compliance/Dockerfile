@@ -7,10 +7,9 @@ WORKDIR /app
 
 COPY go.work go.work.sum ./
 COPY libs/ ./libs/
-COPY services/compliance/ ./services/compliance/
+COPY services/ ./services/
 
 WORKDIR /app/services/compliance
-    ENV GOWORK=off
 RUN go mod download
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /compliance-server ./cmd/server/
 

@@ -7,10 +7,9 @@ WORKDIR /app
 
 COPY go.work go.work.sum ./
 COPY libs/ ./libs/
-COPY services/graph/ ./services/graph/
+COPY services/ ./services/
 
 WORKDIR /app/services/graph
-    ENV GOWORK=off
 RUN go mod download
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /graph-server ./cmd/server/
 

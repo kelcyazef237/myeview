@@ -7,10 +7,9 @@ WORKDIR /app
 
 COPY go.work go.work.sum ./
 COPY libs/ ./libs/
-COPY services/enrichment/ ./services/enrichment/
+COPY services/ ./services/
 
 WORKDIR /app/services/enrichment
-    ENV GOWORK=off
 RUN go mod download
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /enrichment-server ./cmd/server/
 

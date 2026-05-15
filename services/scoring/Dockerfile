@@ -7,10 +7,9 @@ WORKDIR /app
 
 COPY go.work go.work.sum ./
 COPY libs/ ./libs/
-COPY services/scoring/ ./services/scoring/
+COPY services/ ./services/
 
 WORKDIR /app/services/scoring
-    ENV GOWORK=off
 RUN go mod download
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /scoring-server ./cmd/server/
 
