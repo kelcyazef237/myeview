@@ -38,17 +38,34 @@ install_docker() {
     echo "Docker not found. Attempting to install Docker..."
     if [ -x "$(command -v apt-get)" ]; then
         sudo apt-get update
-        sudo apt-get install -y ca-certificates curl gnupg
+        sudo apt-get install -y ca-certificates curl gnupg lsb-release
         sudo install -m 0755 -d /etc/apt/keyrings
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+        
+        # Detect OS and Codename
+        ID=$(. /etc/os-release && echo "$ID")
+        VERSION_CODENAME=$(. /etc/os-release && echo "$VERSION_CODENAME")
+        
+        # Docker repo path (debian or ubuntu)
+        REPO_OS=$ID
+        if [ "$ID" = "debian" ]; then
+            # If Trixie (testing), fallback to Bookworm as Docker might not have Trixie repos yet
+            if [ "$VERSION_CODENAME" = "trixie" ]; then
+                echo "Detected Debian Trixie. Falling back to Bookworm for Docker repo..."
+                VERSION_CODENAME="bookworm"
+            fi
+        fi
+
+        curl -fsSL https://download.docker.com/linux/$REPO_OS/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
         sudo chmod a+r /etc/apt/keyrings/docker.gpg
-        echo "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$REPO_OS $VERSION_CODENAME stable" | \
             sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        
         sudo apt-get update
         sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
         sudo usermod -aG docker $USER
         echo -e "\033[1;33m⚠️ Docker installed. You may need to log out and log back in for permissions to apply.\033[0m"
     else
+
         echo -e "\033[1;31m❌ Please install Docker manually: https://docs.docker.com/get-docker/\033[0m"
         exit 1
     fi
