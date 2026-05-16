@@ -50,29 +50,31 @@ func ensureStreams(js nats.JetStreamContext) error {
 	streams := []nats.StreamConfig{
 		{
 			Name:     "DISCOVERY",
-			Subjects: []string{"asset.discovered.*"},
+			Subjects: []string{"asset.discovered.>"},
 			MaxAge:   24 * time.Hour,
 		},
 		{
 			Name:     "VERIFICATION",
-			Subjects: []string{"asset.verified.*"},
+			Subjects: []string{"asset.verified.>"},
 			MaxAge:   24 * time.Hour,
 		},
 		{
 			Name:     "ENRICHMENT",
-			Subjects: []string{"asset.enriched.*"},
+			Subjects: []string{"asset.enriched.>"},
 			MaxAge:   24 * time.Hour,
 		},
 		{
 			Name:     "SCORING",
-			Subjects: []string{"risk.scored.*"},
+			Subjects: []string{"risk.scored.>"},
 			MaxAge:   24 * time.Hour,
 		},
 	}
 
 	for _, cfg := range streams {
 		if _, err := js.AddStream(&cfg); err != nil {
-			return fmt.Errorf("failed to create stream %s: %w", cfg.Name, err)
+			if _, err := js.UpdateStream(&cfg); err != nil {
+				return fmt.Errorf("failed to create or update stream %s: %w", cfg.Name, err)
+			}
 		}
 	}
 
