@@ -16,7 +16,7 @@ const dashScopeBaseURL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1
 // Model constants for Qwen
 const (
 	qwenChatModel      = "qwen-plus"          // Best cost/quality balance
-	qwenEmbeddingModel = "text-embedding-v3"  // 1536-dim, matches pgvector schema
+	qwenEmbeddingModel = "text-embedding-v2"  // 1536-dim, matches pgvector schema
 )
 
 type LLMService interface {
