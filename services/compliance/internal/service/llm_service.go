@@ -11,7 +11,7 @@ import (
 
 // DashScope (Alibaba Cloud) OpenAI-compatible API endpoint
 // Qwen models are fully compatible with the OpenAI SDK via this base URL
-const dashScopeBaseURL = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+const dashScopeBaseURL = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
 
 // Model constants for Qwen
 const (
