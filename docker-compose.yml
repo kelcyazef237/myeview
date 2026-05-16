@@ -104,7 +104,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
       REDIS_HOST: redis
       REDIS_PORT: "6379"
-      CORS_ORIGIN: http://localhost:3000
+      CORS_ORIGIN: "*"
     depends_on:
       postgres:
         condition: service_healthy

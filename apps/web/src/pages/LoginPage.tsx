@@ -46,7 +46,7 @@ export default function LoginPage() {
           email: email,
           name: email.split("@")[0].replace(/[^a-zA-Z]/g, " "),
           role: "admin",
-          organization_id: "org_001",
+          organization_id: "06a86ad5-0320-4f45-b8f1-82a56c8f25de",
           organization_name: "MYEVIEW Corp",
           created_at: new Date().toISOString(),
         };
