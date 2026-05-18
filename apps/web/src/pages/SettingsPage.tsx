@@ -128,27 +128,58 @@ export default function SettingsPage() {
           {activeTab === "api-keys" && (
             <div className="space-y-6">
               <h2 className="text-lg font-semibold text-white">API Keys</h2>
-              <p className="text-sm text-white/40">Manage API keys for third-party intelligence sources. These are used by the Discovery and Enrichment services.</p>
-              {[
-                { name: "Shodan", env: "SHODAN_API_KEY", desc: "Passive host intelligence" },
-                { name: "Censys", env: "CENSYS_API_ID / CENSYS_SECRET", desc: "Certificate and host search" },
-                { name: "VirusTotal", env: "VIRUSTOTAL_API_KEY", desc: "Threat intelligence lookups" },
-              ].map((key) => (
-                <div key={key.name} className="p-4 bg-surface-900/50 rounded-xl border border-white/5 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-cyber-purple/10"><Key className="w-4 h-4 text-cyber-purple" /></div>
+              <p className="text-sm text-white/40">Manage API keys for third-party intelligence sources. These are used by the Discovery and Enrichment services when running Advanced Scans.</p>
+              
+              <div className="space-y-4">
+                <div className="p-4 bg-surface-900/50 rounded-xl border border-white/5">
+                  <h3 className="text-sm font-medium text-white flex items-center gap-2 mb-3">
+                    <Key className="w-4 h-4 text-brand-400" />
+                    Shodan API
+                  </h3>
+                  <input
+                    type="password"
+                    placeholder="Enter Shodan API Key"
+                    defaultValue={localStorage.getItem("myeview_shodan_key") || ""}
+                    onChange={(e) => localStorage.setItem("myeview_shodan_key", e.target.value)}
+                    className="bg-surface-900 border border-white/5 rounded-lg px-4 py-2.5 text-sm text-white w-full focus:border-brand-500/50 outline-none transition-all"
+                  />
+                </div>
+
+                <div className="p-4 bg-surface-900/50 rounded-xl border border-white/5">
+                  <h3 className="text-sm font-medium text-white flex items-center gap-2 mb-3">
+                    <Shield className="w-4 h-4 text-purple-400" />
+                    Censys API
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm font-medium text-white">{key.name}</p>
-                      <p className="text-xs text-white/35">{key.desc}</p>
+                      <label className="block text-xs font-medium text-white/50 mb-1.5 uppercase">API ID</label>
+                      <input
+                        type="text"
+                        placeholder="Enter Censys API ID"
+                        defaultValue={localStorage.getItem("myeview_censys_id") || ""}
+                        onChange={(e) => localStorage.setItem("myeview_censys_id", e.target.value)}
+                        className="bg-surface-900 border border-white/5 rounded-lg px-4 py-2.5 text-sm text-white w-full focus:border-brand-500/50 outline-none transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-white/50 mb-1.5 uppercase">API Secret</label>
+                      <input
+                        type="password"
+                        placeholder="Enter Censys API Secret"
+                        defaultValue={localStorage.getItem("myeview_censys_secret") || ""}
+                        onChange={(e) => localStorage.setItem("myeview_censys_secret", e.target.value)}
+                        className="bg-surface-900 border border-white/5 rounded-lg px-4 py-2.5 text-sm text-white w-full focus:border-brand-500/50 outline-none transition-all"
+                      />
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-white/25 font-mono">{key.env}</span>
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-cyber-amber/10 text-cyber-amber border border-cyber-amber/20">ENV</span>
-                  </div>
                 </div>
-              ))}
-              <p className="text-xs text-white/25 flex items-center gap-1.5"><Shield className="w-3 h-3" /> API keys are managed via environment variables for security.</p>
+
+                <div className="flex justify-end pt-2">
+                  <button onClick={handleSave} className="flex items-center gap-2 px-5 py-2.5 bg-brand-500 hover:bg-brand-600 text-white rounded-lg text-sm font-semibold transition-all active:scale-95">
+                    {saved ? <><Check className="w-4 h-4" /> Saved!</> : <><Save className="w-4 h-4" /> Save Configuration</>}
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 

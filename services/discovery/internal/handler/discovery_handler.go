@@ -35,9 +35,10 @@ func NewDiscoveryHandler(svc *service.DiscoveryService, ebus events.EventBus, re
 }
 
 type StartRequest struct {
-	Target string `json:"target" binding:"required"`
-	Mode   string `json:"mode" binding:"required,oneof=base advanced"`
-	OrgID  string `json:"organization_id"`
+	Target  string            `json:"target" binding:"required"`
+	Mode    string            `json:"mode" binding:"required,oneof=base advanced"`
+	OrgID   string            `json:"organization_id"`
+	APIKeys map[string]string `json:"api_keys"`
 }
 
 func (h *DiscoveryHandler) Start(c *gin.Context) {
@@ -61,7 +62,7 @@ func (h *DiscoveryHandler) Start(c *gin.Context) {
 		orgID = uuid.New()
 	}
 
-	h.svc.StartDiscovery(orgID, req.Target, req.Mode)
+	h.svc.StartDiscovery(orgID, req.Target, req.Mode, req.APIKeys)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message":         "Discovery (" + req.Mode + ") started for " + req.Target,

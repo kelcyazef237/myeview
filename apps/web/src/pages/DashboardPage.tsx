@@ -71,10 +71,21 @@ export default function DashboardPage() {
     if (!target) return;
     setIsStarting(true);
     try {
+      const apiKeys: Record<string, string> = {};
+      const shodanKey = localStorage.getItem("myeview_shodan_key");
+      const censysId = localStorage.getItem("myeview_censys_id");
+      const censysSecret = localStorage.getItem("myeview_censys_secret");
+      
+      if (shodanKey) apiKeys["shodan"] = shodanKey;
+      if (censysId && censysSecret) {
+        apiKeys["censys_id"] = censysId;
+        apiKeys["censys_secret"] = censysSecret;
+      }
+
       const response = await fetch("/api/v1/discovery/start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ target, mode }),
+        body: JSON.stringify({ target, mode, api_keys: apiKeys }),
       });
       if (response.ok) {
         setTarget("");

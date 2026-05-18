@@ -44,7 +44,7 @@ func NewDiscoveryService(ebus events.EventBus, repo repository.AssetRepository, 
 }
 
 // StartDiscovery kicks off the discovery process for a target domain asynchronously.
-func (s *DiscoveryService) StartDiscovery(orgID uuid.UUID, target string, mode string) {
+func (s *DiscoveryService) StartDiscovery(orgID uuid.UUID, target string, mode string, apiKeys map[string]string) {
 	go func() {
 		log.Printf("Starting %s discovery for target: %s (Org: %s)", mode, target, orgID)
 
@@ -55,7 +55,20 @@ func (s *DiscoveryService) StartDiscovery(orgID uuid.UUID, target string, mode s
 		sources = append(sources, s.baseSources...)
 
 		if mode == "advanced" {
+			// Append globally configured advanced sources
 			sources = append(sources, s.advancedSources...)
+
+			// Dynamically initialize advanced sources if keys are provided via the UI
+			if apiKeys != nil {
+				if key, ok := apiKeys["shodan"]; ok && key != "" {
+					sources = append(sources, NewShodanSource(key))
+				}
+				censysID := apiKeys["censys_id"]
+				censysSecret := apiKeys["censys_secret"]
+				if censysID != "" && censysSecret != "" {
+					sources = append(sources, NewCensysSource(censysID, censysSecret))
+				}
+			}
 		}
 
 		var wg sync.WaitGroup
