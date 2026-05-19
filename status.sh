@@ -15,8 +15,8 @@ echo ""
 
 OFFLINE_SERVICES=()
 
-# Function to check a service URL
-check_service() {
+# Function to check an HTTP service URL
+check_service_http() {
     local name=$1
     local url=$2
     local docker_name=$3
@@ -32,6 +32,19 @@ check_service() {
     fi
 }
 
+# Function to check a pure worker (no HTTP endpoint)
+check_service_worker() {
+    local name=$1
+    local docker_name=$2
+    
+    if docker compose ps | grep "myeview-$docker_name" | grep -q "Up"; then
+        printf "%-25s [ ${GREEN}CONNECTED${RESET} ]\n" "$name"
+    else
+        printf "%-25s [ ${RED}OFFLINE${RESET}   ]\n" "$name"
+        OFFLINE_SERVICES+=("$docker_name")
+    fi
+}
+
 echo -e "${YELLOW}1. Core Infrastructure${RESET}"
 if docker compose ps | grep -q "Up"; then
     printf "%-25s [ ${GREEN}RUNNING${RESET}   ]\n" "Docker Daemon/Compose"
@@ -44,18 +57,18 @@ fi
 echo ""
 
 echo -e "${YELLOW}2. API Microservices (Internal Health)${RESET}"
-check_service "IAM / Auth (8080)" "http://localhost:8080/health" "iam"
-check_service "Discovery (8081)" "http://localhost:8081/health" "discovery"
-check_service "Verification (8082)" "http://localhost:8082/health" "verification"
-check_service "Enrichment (8083)" "http://localhost:8083/health" "enrichment"
-check_service "Scoring (8084)" "http://localhost:8084/health" "scoring"
-check_service "Graph (8085)" "http://localhost:8085/health" "graph"
-check_service "Compliance (8086)" "http://localhost:8086/health" "compliance"
+check_service_http "IAM / Auth (8080)" "http://localhost:8080/health" "iam"
+check_service_http "Discovery (8081)" "http://localhost:8081/health" "discovery"
+check_service_worker "Verification (Worker)" "verification"
+check_service_worker "Enrichment (Worker)" "enrichment"
+check_service_worker "Scoring (Worker)" "scoring"
+check_service_http "Graph (8085)" "http://localhost:8085/health" "graph"
+check_service_http "Compliance (8086)" "http://localhost:8086/health" "compliance"
 
 echo ""
 echo -e "${YELLOW}3. Web Frontend & Connectivity Proxy${RESET}"
-check_service "Web UI (3000)" "http://localhost:3000" "web"
-check_service "Nginx Proxy -> IAM" "http://localhost:3000/api/v1/auth/health" ""
+check_service_http "Web UI (3000)" "http://localhost:3000" "web"
+check_service_http "Nginx Proxy -> IAM" "http://localhost:3000/api/v1/auth/health" ""
 
 echo ""
 if [ ${#OFFLINE_SERVICES[@]} -ne 0 ]; then
