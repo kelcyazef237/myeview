@@ -61,12 +61,15 @@ export default function DiscoveryPage() {
       });
 
       if (response.ok) {
-        setJobs((prev) =>
-          prev.map((j) =>
-            j.id === newJob.id ? { ...j, status: "completed" as const } : j
-          )
-        );
         setTarget("");
+        // Simulate job completion after a delay to reflect backend asynchronous processing
+        setTimeout(() => {
+          setJobs((prev) =>
+            prev.map((j) =>
+              j.id === newJob.id ? { ...j, status: "completed" as const } : j
+            )
+          );
+        }, 15000);
       } else {
         setJobs((prev) =>
           prev.map((j) =>

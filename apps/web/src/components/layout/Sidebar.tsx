@@ -38,7 +38,7 @@ const navigation: NavGroup[] = [
   {
     title: "Intelligence",
     items: [
-      { label: "Assets", icon: Globe, path: "/assets", badge: 12 },
+      { label: "Assets", icon: Globe, path: "/assets" },
       { label: "Discovery", icon: Search, path: "/discovery" },
       { label: "Attack Paths", icon: Network, path: "/attack-paths" },
     ],

@@ -9,6 +9,7 @@ import (
 
 type AssetRepository interface {
 	UpdateEnrichment(ctx context.Context, orgID string, targetID string, name string, result *domain.EnrichedAsset) error
+	FindEnrichedByOrg(ctx context.Context, orgID string) ([]domain.Asset, error)
 }
 
 type assetRepository struct {
@@ -29,3 +30,10 @@ func (r *assetRepository) UpdateEnrichment(ctx context.Context, orgID string, ta
 			"updated_at":     gorm.Expr("NOW()"),
 		}).Error
 }
+
+func (r *assetRepository) FindEnrichedByOrg(ctx context.Context, orgID string) ([]domain.Asset, error) {
+	var assets []domain.Asset
+	err := r.db.WithContext(ctx).Where("organization_id = ? AND (cloud_provider != '' OR tech_stack IS NOT NULL)", orgID).Order("updated_at DESC").Find(&assets).Error
+	return assets, err
+}
+

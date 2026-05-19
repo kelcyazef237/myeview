@@ -46,7 +46,7 @@ export default function RegisterPage() {
           email: email,
           name: name,
           role: "admin",
-          organization_id: `org_${Math.random().toString(36).substr(2, 5)}`,
+          organization_id: "06a86ad5-0320-4f45-b8f1-82a56c8f25de",
           organization_name: organization,
           created_at: new Date().toISOString(),
         };

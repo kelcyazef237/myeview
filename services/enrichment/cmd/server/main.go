@@ -7,11 +7,13 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/gin-gonic/gin"
 	"github.com/myeview/myeview/libs/db"
 	"github.com/myeview/myeview/libs/events"
 	"github.com/myeview/myeview/services/enrichment/internal/config"
 	"github.com/myeview/myeview/services/enrichment/internal/consumer"
 	"github.com/myeview/myeview/services/enrichment/internal/domain"
+	"github.com/myeview/myeview/services/enrichment/internal/handler"
 	"github.com/myeview/myeview/services/enrichment/internal/repository"
 	"github.com/myeview/myeview/services/enrichment/internal/service"
 )
@@ -60,6 +62,25 @@ func main() {
 	if err := verifiedConsumer.Start(ctx); err != nil {
 		log.Fatalf("Failed to start verified consumer: %v", err)
 	}
+
+	// Initialize Handler & Router
+	enrichHandler := handler.NewEnrichmentHandler(assetRepo)
+	r := gin.Default()
+	api := r.Group("/api/v1")
+	{
+		api.GET("/enrichment/results", enrichHandler.GetResults)
+	}
+
+	r.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{"status": "ok", "service": "enrichment"})
+	})
+
+	log.Printf("Enrichment service starting on port %s", cfg.Port)
+	go func() {
+		if err := r.Run(":" + cfg.Port); err != nil {
+			log.Fatalf("Failed to run server: %v", err)
+		}
+	}()
 
 	log.Println("Enrichment service is running...")
 

@@ -9,6 +9,7 @@ import (
 
 type AssetRepository interface {
 	UpdateRiskScore(ctx context.Context, orgID string, targetID string, name string, result *domain.RiskResult) error
+	FindScoredByOrg(ctx context.Context, orgID string) ([]domain.Asset, error)
 }
 
 type assetRepository struct {
@@ -28,3 +29,10 @@ func (r *assetRepository) UpdateRiskScore(ctx context.Context, orgID string, tar
 			"updated_at":    gorm.Expr("NOW()"),
 		}).Error
 }
+
+func (r *assetRepository) FindScoredByOrg(ctx context.Context, orgID string) ([]domain.Asset, error) {
+	var assets []domain.Asset
+	err := r.db.WithContext(ctx).Where("organization_id = ? AND risk_score > 0", orgID).Order("risk_score DESC").Find(&assets).Error
+	return assets, err
+}
+
