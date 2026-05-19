@@ -68,7 +68,7 @@ check_service_http "Compliance (8086)" "http://localhost:8086/health" "complianc
 echo ""
 echo -e "${YELLOW}3. Web Frontend & Connectivity Proxy${RESET}"
 check_service_http "Web UI (3000)" "http://localhost:3000" "web"
-check_service_http "Nginx Proxy -> IAM" "http://localhost:3000/api/v1/auth/health" ""
+check_service_http "Nginx Proxy Route" "http://localhost:3000/nginx-health" ""
 
 echo ""
 if [ ${#OFFLINE_SERVICES[@]} -ne 0 ]; then
