@@ -13,16 +13,22 @@ echo -e "\033[1;34m           MYEVIEW Service Status Dashboard              \033
 echo -e "\033[1;34m=========================================================\033[0m"
 echo ""
 
+OFFLINE_SERVICES=()
+
 # Function to check a service URL
 check_service() {
     local name=$1
     local url=$2
+    local docker_name=$3
     
     # Try to curl the endpoint with a 2-second timeout
     if curl -s --max-time 2 "$url" | grep -q "ok\|OK\|true" || curl -s --max-time 2 -o /dev/null -w "%{http_code}" "$url" | grep -q "200"; then
         printf "%-25s [ ${GREEN}CONNECTED${RESET} ]\n" "$name"
     else
         printf "%-25s [ ${RED}OFFLINE${RESET}   ]\n" "$name"
+        if [ ! -z "$docker_name" ]; then
+            OFFLINE_SERVICES+=("$docker_name")
+        fi
     fi
 }
 
@@ -35,26 +41,33 @@ else
     exit 1
 fi
 
-# Check DBs via docker exec if possible, or just assume connected if container is up
-# For simplicity, we just rely on the API health endpoints which check the DB anyway.
 echo ""
 
 echo -e "${YELLOW}2. API Microservices (Internal Health)${RESET}"
-check_service "IAM / Auth (8080)" "http://localhost:8080/health"
-check_service "Discovery (8081)" "http://localhost:8081/health"
-check_service "Verification (8082)" "http://localhost:8082/health"
-check_service "Enrichment (8083)" "http://localhost:8083/health"
-check_service "Scoring (8084)" "http://localhost:8084/health"
-check_service "Graph (8085)" "http://localhost:8085/health"
-check_service "Compliance (8086)" "http://localhost:8086/health"
+check_service "IAM / Auth (8080)" "http://localhost:8080/health" "iam"
+check_service "Discovery (8081)" "http://localhost:8081/health" "discovery"
+check_service "Verification (8082)" "http://localhost:8082/health" "verification"
+check_service "Enrichment (8083)" "http://localhost:8083/health" "enrichment"
+check_service "Scoring (8084)" "http://localhost:8084/health" "scoring"
+check_service "Graph (8085)" "http://localhost:8085/health" "graph"
+check_service "Compliance (8086)" "http://localhost:8086/health" "compliance"
 
 echo ""
 echo -e "${YELLOW}3. Web Frontend & Connectivity Proxy${RESET}"
-check_service "Web UI (3000)" "http://localhost:3000"
-# Test proxy routing by hitting IAM through Nginx proxy
-check_service "Nginx Proxy -> IAM" "http://localhost:3000/api/v1/auth/health"
+check_service "Web UI (3000)" "http://localhost:3000" "web"
+check_service "Nginx Proxy -> IAM" "http://localhost:3000/api/v1/auth/health" ""
 
 echo ""
-echo "Note: If API Microservices are OFFLINE, wait a few minutes for them to boot."
-echo "If they stay OFFLINE, run 'docker compose logs <service_name>' to check for errors."
+if [ ${#OFFLINE_SERVICES[@]} -ne 0 ]; then
+    echo -e "${RED}Some services are OFFLINE. Fetching recent logs...${RESET}"
+    echo "========================================================="
+    for svc in "${OFFLINE_SERVICES[@]}"; do
+        echo -e "\n${YELLOW}---> Logs for service: ${svc} <---${RESET}"
+        docker compose logs --tail=15 "$svc" 2>/dev/null || echo "Could not fetch logs for $svc."
+    done
+    echo -e "\n========================================================="
+    echo "Note: If the containers are still booting, wait a minute and run ./status.sh again."
+else
+    echo -e "${GREEN}All systems are go! No offline services detected.${RESET}"
+fi
 echo ""
