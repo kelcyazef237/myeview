@@ -10,7 +10,7 @@ COPY libs/ ./libs/
 COPY services/ ./services/
 
 WORKDIR /app/services/graph
-RUN go mod download
+RUN GOPROXY=direct go mod download || (sleep 2 && GOPROXY=direct go mod download) || (sleep 5 && GOPROXY=direct go mod download)
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /graph-server ./cmd/server/
 
 # ── Stage 2: Runtime ──

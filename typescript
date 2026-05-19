@@ -1,0 +1,156 @@
+Script started on 2026-05-19 02:58:06+01:00 [TERM="xterm-256color" TTY="/dev/pts/3" COLUMNS="125" LINES="13"]
+                                                                                                                             ]0;kelcy@kali: ~/Projects/MYEVIEW[0m[27m[24m[J[32m┌──([1m[32m[34mkelcy㉿kali[0m[34m[32m)-[[1m[32m[39m~/Projects/MYEVIEW[0m[32m]
+└─[1m[32m[34m$[0m[34m[39m [K[?1h=[?2004hc[4mc[24m[4mc[24m[38;5;244mode .[39m[4mc[39m[4md[24m[39m [39m [39m [39m [24m[36mc[24m[36md[39m[38;5;244m Test[39m[36mc[36md[36m [39m[36mc[36md[39m[39m [39ms[39m [39m [39m [1ms[0m[38;5;244mcolarite[39m[8D[1ms[39m[1mc[0m[1mc[39m[1mr[0m[39m [39m [39m [39m [39m [39m [38;5;244meens[39m[1mr[39m[1mi[0m[39m [39m [39m [1mi[1mp[0m[1mp[1mt[0m[1mt[1ms/[0m[1ms[0m[0m [?1l>[?2004l
+                                                                                                                             ]0;kelcy@kali: ~/Projects/MYEVIEW/scripts
+[0m[27m[24m[J[32m┌──([1m[32m[34mkelcy㉿kali[0m[34m[32m)-[[1m[32m[39m~/Projects/MYEVIEW/scripts[0m[32m]
+└─[1m[32m[34m$[0m[34m[39m [K[?1h=[?2004h./dev-local.sh stop
+./dev-local.sh[K
+[K[A[A[4C[36m.[36m/[36md[36me[36mv[36m-[36ml[36mo[36mc[36ma[36ml[36m.[36ms[36mh[39m[1B[36m.[36m/[36md[36me[36mv[36m-[36ml[36mo[36mc[36ma[36ml[36m.[36ms[36mh[39m[1B[K[?1l>[?2004l
+[0;34m[MYEVIEW][0m Stopping MYEVIEW services...
+[0;32m  ✓[0m Stopped nats (PID: 245121)
+[0;32m  ✓[0m Stopped web (PID: 245324)
+[0;32m  ✓[0m All services stopped
+
+[0;34m╔═══════════════════════════════════════╗[0m
+[0;34m║   MYEVIEW — Local Development Mode    ║[0m
+[0;34m╚═══════════════════════════════════════╝[0m
+
+[0;34m[MYEVIEW][0m Starting infrastructure...
+[0;32m  ✓[0m PostgreSQL already running
+[0;34m[MYEVIEW][0m Starting NATS JetStream...
+[0;32m  ✓[0m NATS JetStream started (PID: 252551)
+[0;32m  ✓[0m Redis already running
+
+[0;34m[MYEVIEW][0m Starting Go services...
+[0;34m[MYEVIEW][0m Starting iam service on :8080...
+[0;32m  ✓[0m iam started (PID: 252620)
+[0;34m[MYEVIEW][0m Starting discovery service on :8081...
+[0;32m  ✓[0m discovery started (PID: 252625)
+[0;34m[MYEVIEW][0m Starting verification service on :8082...
+[0;32m  ✓[0m verification started (PID: 252628)
+[0;34m[MYEVIEW][0m Starting enrichment service on :8083...
+[0;32m  ✓[0m enrichment started (PID: 252637)
+[0;34m[MYEVIEW][0m Starting scoring service on :8084...
+[0;32m  ✓[0m scoring started (PID: 252648)
+[0;34m[MYEVIEW][0m Starting graph service on :8085...
+[0;32m  ✓[0m graph started (PID: 252652)
+[0;34m[MYEVIEW][0m Starting compliance service on :8086...
+[0;32m  ✓[0m compliance started (PID: 252661)
+
+[0;34m[MYEVIEW][0m Starting frontend...
+[0;32m  ✓[0m Frontend started (PID: 252677)
+
+[0;32m════════════════════════════════════════[0m
+[0;32m  All services started![0m
+[0;32m  Frontend:  http://localhost:3000[0m
+[0;32m  IAM:       http://localhost:8080/health[0m
+[0;32m  Discovery: http://localhost:8081/health[0m
+[0;32m  Graph:     http://localhost:8085/health[0m
+[0;32m  Logs:      /home/kelcy/Projects/MYEVIEW/.dev-logs/[0m
+[0;32m════════════════════════════════════════[0m
+                                                                                                                             ]0;kelcy@kali: ~/Projects/MYEVIEW/scripts
+[0m[27m[24m[J[32m┌──([1m[32m[34mkelcy㉿kali[0m[34m[32m)-[[1m[32m[39m~/Projects/MYEVIEW/scripts[0m[32m]
+└─[1m[32m[34m$[0m[34m[39m [K[?1h=[?2004hc[4mc[24m[4mc[24m[38;5;244md scripts[39m[9D[4mc[39m[4md[24m[24m[36mc[24m[36md[39m[36mc[36md[36m [39m[36mc[36md[39m[39m [39m.[39m [39m [39m [39m [39m [39m [1m.[0m[38;5;244m.[39m[1m.[39m[1m.[0m[?1l>[?2004l
+                                                                                                                             ]0;kelcy@kali: ~/Projects/MYEVIEW
+[0m[27m[24m[J[32m┌──([1m[32m[34mkelcy㉿kali[0m[34m[32m)-[[1m[32m[39m~/Projects/MYEVIEW[0m[32m]
+└─[1m[32m[34m$[0m[34m[39m [K[?1h=[?2004hl[36ml[39m[36ml[39m[38;5;244ms[39m[36ml[36ms[39m[36ml[36ms[36mo[39m[39m[4ml[39m[4ms[39m[4mo[24m[38;5;244mf -i:236599[39m[11D[4mo[39m[4mf[24m[24m[36ml[24m[36ms[24m[36mo[24m[36mf[39m[39m [39m-[39mi[39m:[39m2[39m3[39m6[39m5[39m9[39m9[9D[32m-[32mi[32m:[32m2[32m3[32m6[32m5[32m9[32m9[39m[32m9[39m[39m [38;5;244m9[39m[32m5[39m[39m [39m [38;5;244m99[39m[32m6[39m[39m [39m [39m [38;5;244m599[39m[32m3[39m[39m [39m [39m [39m [38;5;244m6599[39m[32m2[39m[39m [39m [39m [39m [39m [38;5;244m36599[39m[32m:[39m[39m [39m [39m [39m [39m [39m [38;5;244m236599[39m[32m:[32m3[39m[39m [39m [39m [39m [39m [32m3[32m0[39m[32m0[32m0[39m[32m0[32m0[39m[?1l>[?2004l
+COMMAND    PID  USER FD   TYPE  DEVICE SIZE/OFF NODE NAME
+node    237029 kelcy 25u  IPv4 1013771      0t0  TCP localhost:3000 (LISTEN)
+                                                                                                                             ]0;kelcy@kali: ~/Projects/MYEVIEW
+[0m[27m[24m[J[32m┌──([1m[32m[34mkelcy㉿kali[0m[34m[32m)-[[1m[32m[39m~/Projects/MYEVIEW[0m[32m]
+└─[1m[32m[34m$[0m[34m[39m [K[?1h=[?2004hl[36ml[39m[36ml[39m[38;5;244msof -i:3000[39m[11D[36ml[39m[39ms[39mo[39mf[39m [39m-[39mi[39m:[39m3[39m0[39m0[39m0[12D[36ml[36ms[36mo[36mf[39m [32m-[32mi[32m:[32m3[32m0[32m0[32m0[39m[32m0[39m[39m [38;5;244m0[39m[32m0[39m[39m [39m [38;5;244m00[39m[32m3[39m[39m [39m [39m [38;5;244m000[39m[32m:[39m[39m [39m [39m [39m [38;5;244m3000[39m[32m:[32m8[39m[39m [39m [39m [38;5;244m086[39m[32m8[32m0[39m[32m0[32m8[39m[32m8[32m0[39m[?1l>[?2004l
+                                                                                                                             ]0;kelcy@kali: ~/Projects/MYEVIEW
+[0m[27m[24m[J[32m┌──([1m[32m[34mkelcy㉿kali[0m[34m[32m)-[[1m[32m[39m~/Projects/MYEVIEW[0m[32m]
+└─[1m[32m[34m$[0m[34m[39m [K[?1h=[?2004hc[4mc[24m[4mc[24m[38;5;244md ..[39m[4mc[39m[4md[24m[24m[36mc[24m[36md[39m[36mc[36md[36m [39m[36mc[36md[39m[39m [39m.[1m.[0m[1m.[39m[1md[0m[1md[1me[0m[0m.[0md[0mev-[1m.[1md[1me[1mv[1m-[0m[1m-[1ml[0m[1ml[1mo[0m[1mo[1mgs/[0m[1ms[0m[0m [?1l>[?2004l
+                                                                                                                             ]0;kelcy@kali: ~/Projects/MYEVIEW/.dev-logs
+[0m[27m[24m[J[32m┌──([1m[32m[34mkelcy㉿kali[0m[34m[32m)-[[1m[32m[39m~/Projects/MYEVIEW/.dev-logs[0m[32m]
+└─[1m[32m[34m$[0m[34m[39m [K[?1h=[?2004h[?1l>[?2004l
+                                                                                                                             ]0;kelcy@kali: ~/Projects/MYEVIEW/.dev-logs
+[0m[27m[24m[J[32m┌──([1m[32m[34mkelcy㉿kali[0m[34m[32m)-[[1m[32m[39m~/Projects/MYEVIEW/.dev-logs[0m[32m]
+└─[1m[32m[34m$[0m[34m[39m [K[?1h=[?2004hs[4ms[24m[4ms[24m[38;5;244mudo mysql[39m[9D[24m [39m [39m [39m [39m [39m [39m [39m [39m [39m [10Dl[36ml[39m[36ml[39m[38;5;244msof -i:8080[39m[11D[36ml[36ms[39m[39m [39m [39m [39m [39m [39m [39m [39m [39m [39m [10D[?1l>[?2004l
+compliance.log  enrichment.log  iam.log   redis.log    verification.log
+discovery.log   graph.log       nats.log  scoring.log  web.log
+                                                                                                                             ]0;kelcy@kali: ~/Projects/MYEVIEW/.dev-logs
+[0m[27m[24m[J[32m┌──([1m[32m[34mkelcy㉿kali[0m[34m[32m)-[[1m[32m[39m~/Projects/MYEVIEW/.dev-logs[0m[32m]
+└─[1m[32m[34m$[0m[34m[39m [K[?1h=[?2004hc[4mc[24m[4mc[24m[38;5;244md .dev-logs[39m[11D[4mc[39m[4ma[24m[39m [39m [39m [39m [39m [39m [39m [39m [39m [39m [10D[38;5;244mt .key[39m[4mc[4ma[39m[4mt[24m[24m[36mc[24m[36ma[24m[36mt[39m[36mt[36m [39m[36mt[39m[39m [39m*[39m [39m [39m [1m[34m*[0m[39m[1m[34m*[1m[34m.[0m[39m[1m[34m*[0m[39m[0m[39m.log[?1l>[?2004l
+
+2026/05/19 02:58:16 [35m/home/kelcy/Projects/MYEVIEW/libs/db/db.go:27
+[0m[31m[error] [0mfailed to initialize database, got error failed to connect to `user=myeview database=myeview`: 127.0.0.1:5432 (localhost): server error: FATAL: database "myeview" does not exist (SQLSTATE 3D000)
+2026/05/19 02:58:16 Failed to connect to database: failed to connect to database: failed to connect to `user=myeview database=myeview`: 127.0.0.1:5432 (localhost): server error: FATAL: database "myeview" does not exist (SQLSTATE 3D000)
+exit status 1
+
+2026/05/19 02:58:16 [35m/home/kelcy/Projects/MYEVIEW/libs/db/db.go:27
+[0m[31m[error] [0mfailed to initialize database, got error failed to connect to `user=myeview database=myeview`: 127.0.0.1:5432 (localhost): server error: FATAL: database "myeview" does not exist (SQLSTATE 3D000)
+2026/05/19 02:58:16 Failed to connect to database: failed to connect to database: failed to connect to `user=myeview database=myeview`: 127.0.0.1:5432 (localhost): server error: FATAL: database "myeview" does not exist (SQLSTATE 3D000)
+exit status 1
+
+2026/05/19 02:58:16 [35m/home/kelcy/Projects/MYEVIEW/libs/db/db.go:27
+[0m[31m[error] [0mfailed to initialize database, got error failed to connect to `user=myeview database=myeview`: 127.0.0.1:5432 (localhost): server error: FATAL: database "myeview" does not exist (SQLSTATE 3D000)
+2026/05/19 02:58:16 Failed to connect to database: failed to connect to database: failed to connect to `user=myeview database=myeview`: 127.0.0.1:5432 (localhost): server error: FATAL: database "myeview" does not exist (SQLSTATE 3D000)
+exit status 1
+
+2026/05/19 02:58:16 [35m/home/kelcy/Projects/MYEVIEW/libs/db/db.go:27
+[0m[31m[error] [0mfailed to initialize database, got error failed to connect to `user=myeview database=myeview`: 127.0.0.1:5432 (localhost): server error: FATAL: database "myeview" does not exist (SQLSTATE 3D000)
+2026/05/19 02:58:16 Failed to connect to database: failed to connect to database: failed to connect to `user=myeview database=myeview`: 127.0.0.1:5432 (localhost): server error: FATAL: database "myeview" does not exist (SQLSTATE 3D000)
+exit status 1
+
+2026/05/19 02:58:16 [35m/home/kelcy/Projects/MYEVIEW/services/iam/cmd/server/main.go:89
+[0m[31m[error] [0mfailed to initialize database, got error failed to connect to `user=myeview database=myeview`: 127.0.0.1:5432 (localhost): server error: FATAL: database "myeview" does not exist (SQLSTATE 3D000)
+{"level":"fatal","ts":"2026-05-19T02:58:16.869+0100","caller":"logger/logger.go:40","msg":"Failed to connect to database","error":"failed to connect to database: failed to connect to `user=myeview database=myeview`: 127.0.0.1:5432 (localhost): server error: FATAL: database \"myeview\" does not exist (SQLSTATE 3D000)"}
+exit status 1
+[252551] 2026/05/19 02:58:15.570845 [INF] Starting nats-server
+[252551] 2026/05/19 02:58:15.570894 [INF]   Version:  2.14.0
+[252551] 2026/05/19 02:58:15.570900 [INF]   Git:      [not set]
+[252551] 2026/05/19 02:58:15.570903 [INF]   Name:     NDHPTAM7JPZFNMRKMFH4JRVSJNAQNSRB6SJ65A5YWTARRGQGOQTDHYJR
+[252551] 2026/05/19 02:58:15.570908 [INF]   Node:     k2ZTRiA3
+[252551] 2026/05/19 02:58:15.570911 [INF]   ID:       NDHPTAM7JPZFNMRKMFH4JRVSJNAQNSRB6SJ65A5YWTARRGQGOQTDHYJR
+[252551] 2026/05/19 02:58:15.571448 [INF] Starting JetStream
+[252551] 2026/05/19 02:58:15.571474 [WRN] Temporary storage directory used, data could be lost on system reboot
+[252551] 2026/05/19 02:58:15.571575 [INF]     _ ___ _____ ___ _____ ___ ___   _   __  __
+[252551] 2026/05/19 02:58:15.571583 [INF]  _ | | __|_   _/ __|_   _| _ \ __| /_\ |  \/  |
+[252551] 2026/05/19 02:58:15.571586 [INF] | || | _|  | | \__ \ | | |   / _| / _ \| |\/| |
+[252551] 2026/05/19 02:58:15.571589 [INF]  \__/|___| |_| |___/ |_| |_|_\___/_/ \_\_|  |_|
+[252551] 2026/05/19 02:58:15.571591 [INF] 
+[252551] 2026/05/19 02:58:15.571594 [INF]          https://docs.nats.io/jetstream
+[252551] 2026/05/19 02:58:15.571596 [INF] 
+[252551] 2026/05/19 02:58:15.571598 [INF] ---------------- JETSTREAM ----------------
+[252551] 2026/05/19 02:58:15.571600 [INF]   Strict:          true
+[252551] 2026/05/19 02:58:15.571604 [INF]   Max Memory:      35.02 GB
+[252551] 2026/05/19 02:58:15.571607 [INF]   Max Storage:     17.49 GB
+[252551] 2026/05/19 02:58:15.571610 [INF]   Store Directory: "/tmp/nats/jetstream"
+[252551] 2026/05/19 02:58:15.571612 [INF]   API Level:       4
+[252551] 2026/05/19 02:58:15.571614 [INF] -------------------------------------------
+[252551] 2026/05/19 02:58:15.571745 [INF] Took 274.693µs to start JetStream
+[252551] 2026/05/19 02:58:15.571929 [INF] Listening for client connections on 0.0.0.0:4222
+[252551] 2026/05/19 02:58:15.572548 [INF] Server is ready
+236487:C 19 May 2026 02:47:58.968 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+236488:C 19 May 2026 02:47:58.968 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+236488:C 19 May 2026 02:47:58.968 * Redis version=8.0.6, bits=64, commit=00000000, modified=0, pid=236488, just started
+236488:C 19 May 2026 02:47:58.968 * Configuration loaded
+236488:M 19 May 2026 02:47:58.969 * monotonic clock: POSIX clock_gettime
+236488:M 19 May 2026 02:47:58.971 # Failed to write PID file: Permission denied
+236488:M 19 May 2026 02:47:58.971 * Running mode=standalone, port=6379.
+236488:M 19 May 2026 02:47:58.972 * Server initialized
+236488:M 19 May 2026 02:47:58.973 * Ready to accept connections tcp
+
+2026/05/19 02:58:16 [35m/home/kelcy/Projects/MYEVIEW/libs/db/db.go:27
+[0m[31m[error] [0mfailed to initialize database, got error failed to connect to `user=myeview database=myeview`: 127.0.0.1:5432 (localhost): server error: FATAL: database "myeview" does not exist (SQLSTATE 3D000)
+2026/05/19 02:58:16 Failed to connect to database: failed to connect to database: failed to connect to `user=myeview database=myeview`: 127.0.0.1:5432 (localhost): server error: FATAL: database "myeview" does not exist (SQLSTATE 3D000)
+exit status 1
+
+2026/05/19 02:58:16 [35m/home/kelcy/Projects/MYEVIEW/libs/db/db.go:27
+[0m[31m[error] [0mfailed to initialize database, got error failed to connect to `user=myeview database=myeview`: 127.0.0.1:5432 (localhost): server error: FATAL: database "myeview" does not exist (SQLSTATE 3D000)
+2026/05/19 02:58:16 Failed to connect to database: failed to connect to database: failed to connect to `user=myeview database=myeview`: 127.0.0.1:5432 (localhost): server error: FATAL: database "myeview" does not exist (SQLSTATE 3D000)
+exit status 1
+
+> web@0.0.0 dev
+> vite
+
+Port 3000 is in use, trying another one...
+Port 3001 is in use, trying another one...
+Port 3002 is in use, trying another one...
+
+  VITE v8.0.11  ready in 475 ms
+
+  ➜  Local:   http://localhost:3003/
+  ➜  Network

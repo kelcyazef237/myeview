@@ -12,6 +12,9 @@
 # ────────────────────────────────────────────────
 set -euo pipefail
 
+# Ensure Go binaries are in PATH
+export PATH="$PATH:$HOME/go/bin"
+
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 PID_DIR="$ROOT_DIR/.dev-pids"
 LOG_DIR="$ROOT_DIR/.dev-logs"
@@ -65,10 +68,12 @@ start_postgres() {
   fi
 
   # Create database if not exists
+  export PGPASSWORD="${DB_PASSWORD:-myeview_password}"
   psql -h "${DB_HOST:-localhost}" -p "${DB_PORT:-5432}" -U "${DB_USER:-myeview}" -d postgres \
     -tc "SELECT 1 FROM pg_database WHERE datname = '${DB_NAME:-myeview}'" 2>/dev/null | grep -q 1 || \
     psql -h "${DB_HOST:-localhost}" -p "${DB_PORT:-5432}" -U "${DB_USER:-myeview}" -d postgres \
     -c "CREATE DATABASE ${DB_NAME:-myeview}" 2>/dev/null && ok "Database '${DB_NAME:-myeview}' ready" || true
+  unset PGPASSWORD
 }
 
 start_nats() {
