@@ -10,7 +10,7 @@ type Node struct {
 	ID             string                 `gorm:"primaryKey" json:"id"` // Unique identifier (e.g., target domain or IP)
 	OrganizationID uuid.UUID              `gorm:"type:uuid;not null;index" json:"organization_id"`
 	Label          string                 `gorm:"not null;index" json:"label"` // e.g., "Domain", "IP", "Port", "Service"
-	Properties     map[string]interface{} `gorm:"type:jsonb" json:"properties"`
+	Properties     map[string]interface{} `gorm:"type:jsonb;serializer:json" json:"properties"`
 	CreatedAt      time.Time              `json:"created_at"`
 	UpdatedAt      time.Time              `json:"updated_at"`
 }
@@ -20,7 +20,7 @@ type Edge struct {
 	SourceID     string                 `gorm:"not null;index;uniqueIndex:idx_edges_source_target_rel" json:"source_id"`
 	TargetID     string                 `gorm:"not null;index;uniqueIndex:idx_edges_source_target_rel" json:"target_id"`
 	Relationship string                 `gorm:"not null;index;uniqueIndex:idx_edges_source_target_rel" json:"relationship"` // e.g., "RESOLVES_TO", "EXPOSES", "HOSTS"
-	Properties   map[string]interface{} `gorm:"type:jsonb" json:"properties"`
+	Properties   map[string]interface{} `gorm:"type:jsonb;serializer:json" json:"properties"`
 	CreatedAt    time.Time              `json:"created_at"`
 }
 
