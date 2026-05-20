@@ -48,6 +48,14 @@ func (s *DiscoveryService) StartDiscovery(orgID uuid.UUID, target string, mode s
 	go func() {
 		log.Printf("Starting %s discovery for target: %s (Org: %s)", mode, target, orgID)
 
+		// Publish started event
+		s.ebus.Publish(context.Background(), "asset.discovered."+target, events.AssetDiscoveredEvent{
+			OrganizationID: orgID.String(),
+			TargetID:       target,
+			Status:         "started",
+			DiscoveredAt:   time.Now(),
+		})
+
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Minute)
 		defer cancel()
 
@@ -135,7 +143,15 @@ func (s *DiscoveryService) StartDiscovery(orgID uuid.UUID, target string, mode s
 				log.Printf("Failed to publish discovered event for %s: %v", asset.Name, err)
 			}
 		}
-		
+
+		// Publish completed event
+		s.ebus.Publish(context.Background(), "asset.discovered."+target, events.AssetDiscoveredEvent{
+			OrganizationID: orgID.String(),
+			TargetID:       target,
+			Status:         "completed",
+			DiscoveredAt:   time.Now(),
+		})
+
 		log.Printf("Discovery completed for target: %s", target)
 	}()
 }

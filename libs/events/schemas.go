@@ -10,6 +10,7 @@ type AssetDiscoveredEvent struct {
 	AssetType      string    `json:"asset_type"`  // e.g., "subdomain", "ip"
 	Source         string    `json:"source"`      // e.g., "crt.sh", "shodan"
 	DiscoveredAt   time.Time `json:"discovered_at"`
+	Status         string    `json:"status,omitempty"` // e.g., "started", "completed"
 }
 
 // AssetVerifiedEvent is published when the verification service confirms the asset is alive.

@@ -6,7 +6,7 @@ export interface StreamEvent {
   data: any;
 }
 
-export function useDiscoveryStream() {
+export function useDiscoveryStream(onEvent?: (event: StreamEvent) => void) {
   const [isConnected, setIsConnected] = useState(false);
   const [stats, setStats] = useState({
     total_assets: 0,
@@ -64,6 +64,9 @@ export function useDiscoveryStream() {
       ws.current.onmessage = (event) => {
         try {
           const payload: StreamEvent = JSON.parse(event.data);
+          if (onEvent) {
+            onEvent(payload);
+          }
           
           switch (payload.type) {
             case "asset_discovered":

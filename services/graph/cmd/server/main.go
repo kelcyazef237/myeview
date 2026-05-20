@@ -39,6 +39,19 @@ func main() {
 		log.Fatalf("Failed to run migrations: %v", err)
 	}
 
+	// Ensure unique constraint exists for edges
+	database.Exec(`
+		DELETE FROM edges a USING edges b
+		WHERE a.id > b.id
+		  AND a.source_id = b.source_id
+		  AND a.target_id = b.target_id
+		  AND a.relationship = b.relationship;
+	`)
+	database.Exec("ALTER TABLE edges DROP CONSTRAINT IF EXISTS unique_source_target_rel;")
+	if err := database.Exec("ALTER TABLE edges ADD CONSTRAINT unique_source_target_rel UNIQUE (source_id, target_id, relationship);").Error; err != nil {
+		log.Printf("Warning: failed to add unique constraint to edges table: %v", err)
+	}
+
 	// Initialize Event Bus
 	ebus, err := events.NewNATSEventBus(cfg.NatsURL)
 	if err != nil {

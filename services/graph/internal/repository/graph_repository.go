@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/myeview/myeview/services/graph/internal/domain"
@@ -31,13 +32,17 @@ func (r *graphRepository) UpsertNode(ctx context.Context, node *domain.Node) err
 }
 
 func (r *graphRepository) UpsertEdge(ctx context.Context, edge *domain.Edge) error {
+	propertiesBytes, err := json.Marshal(edge.Properties)
+	if err != nil {
+		return fmt.Errorf("failed to marshal edge properties: %w", err)
+	}
 	// Custom raw SQL to avoid duplicates if source, target, relationship match
 	query := `
 		INSERT INTO edges (id, source_id, target_id, relationship, properties, created_at)
 		VALUES (gen_random_uuid(), ?, ?, ?, ?, NOW())
 		ON CONFLICT (source_id, target_id, relationship) DO NOTHING;
 	`
-	err := r.db.WithContext(ctx).Exec(query, edge.SourceID, edge.TargetID, edge.Relationship, edge.Properties).Error
+	err = r.db.WithContext(ctx).Exec(query, edge.SourceID, edge.TargetID, edge.Relationship, propertiesBytes).Error
 	if err != nil {
 		return fmt.Errorf("failed to upsert edge: %w", err)
 	}

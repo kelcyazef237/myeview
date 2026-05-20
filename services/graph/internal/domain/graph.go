@@ -17,9 +17,9 @@ type Node struct {
 
 type Edge struct {
 	ID           uuid.UUID              `gorm:"type:uuid;primaryKey;default:gen_random_uuid()" json:"id"`
-	SourceID     string                 `gorm:"not null;index" json:"source_id"`
-	TargetID     string                 `gorm:"not null;index" json:"target_id"`
-	Relationship string                 `gorm:"not null;index" json:"relationship"` // e.g., "RESOLVES_TO", "EXPOSES", "HOSTS"
+	SourceID     string                 `gorm:"not null;index;uniqueIndex:idx_edges_source_target_rel" json:"source_id"`
+	TargetID     string                 `gorm:"not null;index;uniqueIndex:idx_edges_source_target_rel" json:"target_id"`
+	Relationship string                 `gorm:"not null;index;uniqueIndex:idx_edges_source_target_rel" json:"relationship"` // e.g., "RESOLVES_TO", "EXPOSES", "HOSTS"
 	Properties   map[string]interface{} `gorm:"type:jsonb" json:"properties"`
 	CreatedAt    time.Time              `json:"created_at"`
 }

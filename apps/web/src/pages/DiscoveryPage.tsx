@@ -32,7 +32,33 @@ export default function DiscoveryPage() {
   const [isStarting, setIsStarting] = useState(false);
   const [jobs, setJobs] = useState<DiscoveryJob[]>([]);
   const { user } = useAuthStore();
-  const { isConnected, stats, activities } = useDiscoveryStream();
+  const { isConnected, stats, activities } = useDiscoveryStream((payload) => {
+    if (payload.type === "asset_discovered") {
+      const data = payload.data;
+      if (data.status === "completed") {
+        setJobs((prev) =>
+          prev.map((j) =>
+            j.target === data.target_id ? { ...j, status: "completed" as const } : j
+          )
+        );
+      } else if (data.status === "started") {
+        setJobs((prev) => {
+          if (!prev.some((j) => j.target === data.target_id && j.status === "running")) {
+            const newJob: DiscoveryJob = {
+              id: `job_${Date.now()}`,
+              target: data.target_id,
+              mode: "base",
+              status: "running",
+              assetsFound: 0,
+              startedAt: data.discovered_at || new Date().toISOString(),
+            };
+            return [newJob, ...prev];
+          }
+          return prev;
+        });
+      }
+    }
+  });
 
   const handleStartDiscovery = async () => {
     if (!target.trim()) return;
@@ -62,14 +88,6 @@ export default function DiscoveryPage() {
 
       if (response.ok) {
         setTarget("");
-        // Simulate job completion after a delay to reflect backend asynchronous processing
-        setTimeout(() => {
-          setJobs((prev) =>
-            prev.map((j) =>
-              j.id === newJob.id ? { ...j, status: "completed" as const } : j
-            )
-          );
-        }, 15000);
       } else {
         setJobs((prev) =>
           prev.map((j) =>

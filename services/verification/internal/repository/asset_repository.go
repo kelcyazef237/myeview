@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 
+	"github.com/lib/pq"
 	"github.com/myeview/myeview/services/verification/internal/domain"
 	"gorm.io/gorm"
 )
@@ -24,8 +25,8 @@ func (r *assetRepository) UpdateVerification(ctx context.Context, orgID string, 
 		Where("organization_id = ? AND target_id = ? AND name = ?", orgID, targetID, name).
 		Updates(map[string]interface{}{
 			"is_active":       result.IsActive,
-			"ip_addresses":    result.IPAddresses,
-			"ports_open":      result.PortsOpen,
+			"ip_addresses":    pq.Array(result.IPAddresses),
+			"ports_open":      pq.Array(result.PortsOpen),
 			"tls_valid":       result.TLSValid,
 			"tls_cert_issuer": result.TLSCertIssuer,
 			"tls_cert_expiry": result.TLSCertExpiry,

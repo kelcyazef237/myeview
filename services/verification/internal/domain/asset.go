@@ -4,6 +4,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
+	
 	"gorm.io/gorm"
 )
 
@@ -15,8 +17,8 @@ type Asset struct {
 	Type           string         `gorm:"not null" json:"type"`
 	Source         string         `json:"source"`
 	IsActive       bool           `gorm:"default:false" json:"is_active"`
-	IPAddresses    []string       `gorm:"type:text[]" json:"ip_addresses"`
-	PortsOpen      []int          `gorm:"type:integer[]" json:"ports_open"`
+	IPAddresses    pq.StringArray `gorm:"type:text[]" json:"ip_addresses"`
+	PortsOpen      pq.Int64Array  `gorm:"type:integer[]" json:"ports_open"`
 	TLSValid       bool           `json:"tls_valid"`
 	TLSCertIssuer  string         `json:"tls_cert_issuer"`
 	TLSCertExpiry  *time.Time     `json:"tls_cert_expiry"`

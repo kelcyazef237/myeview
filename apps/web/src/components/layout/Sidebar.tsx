@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import Logo from "./Logo";
+import { useAuthStore } from "../../stores/authStore";
+import { useDiscoveryStream } from "../../hooks/useDiscoveryStream";
 
 interface NavItem {
   label: string;
@@ -72,8 +74,40 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const { user } = useAuthStore();
+  const [assetCount, setAssetCount] = useState<number | undefined>(undefined);
+  const { stats } = useDiscoveryStream();
+
+  useEffect(() => {
+    const fetchAssetCount = async () => {
+      try {
+        const res = await fetch(`/api/v1/discovery/assets?organization_id=${user?.organization_id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setAssetCount(data ? data.length : 0);
+        }
+      } catch (err) {
+        console.error("Failed to fetch assets count", err);
+      }
+    };
+    if (user) {
+      fetchAssetCount();
+    }
+  }, [user]);
+
+  const displayCount = assetCount !== undefined ? assetCount + stats.total_assets : undefined;
 
   const isActive = (path: string) => location.pathname === path;
+
+  const updatedNavigation = navigation.map((group) => ({
+    ...group,
+    items: group.items.map((item) => {
+      if (item.label === "Assets") {
+        return { ...item, badge: displayCount };
+      }
+      return item;
+    }),
+  }));
 
   return (
     <aside
@@ -91,7 +125,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
       {/* Navigation Groups */}
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
-        {navigation.map((group) => (
+        {updatedNavigation.map((group) => (
           <div key={group.title}>
             {/* Group Title */}
             {!collapsed && (
