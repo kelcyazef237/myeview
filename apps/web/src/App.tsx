@@ -11,6 +11,8 @@ import AttackPathsPage from "./pages/AttackPathsPage";
 import RiskScoringPage from "./pages/RiskScoringPage";
 import EnrichmentPage from "./pages/EnrichmentPage";
 import CompliancePage from "./pages/CompliancePage";
+import TLSIntelligencePage from "./pages/TLSIntelligencePage";
+import ExecutiveReportPage from "./pages/ExecutiveReportPage";
 import SettingsPage from "./pages/SettingsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
@@ -69,6 +71,8 @@ export default function App() {
           <Route path="/risks" element={<RiskScoringPage />} />
           <Route path="/enrichment" element={<EnrichmentPage />} />
           <Route path="/compliance" element={<CompliancePage />} />
+          <Route path="/tls-intelligence" element={<TLSIntelligencePage />} />
+          <Route path="/report" element={<ExecutiveReportPage />} />
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
 

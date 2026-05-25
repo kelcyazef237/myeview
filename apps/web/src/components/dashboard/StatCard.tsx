@@ -10,6 +10,10 @@ interface StatCardProps {
   accentColor: "blue" | "green" | "amber" | "red" | "purple";
   suffix?: string;
   delay?: number;
+  /** When set, renders a regulatory framework badge below the value instead of the % trend */
+  regulatoryLabel?: string;
+  /** Optional subtitle shown below the main value */
+  subtitle?: string;
 }
 
 const accentMap = {
@@ -62,6 +66,8 @@ export default function StatCard({
   accentColor,
   suffix = "",
   delay = 0,
+  regulatoryLabel,
+  subtitle,
 }: StatCardProps) {
   const [displayValue, setDisplayValue] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
@@ -148,15 +154,34 @@ export default function StatCard({
           </span>
         </div>
 
-        {/* Trend */}
-        {change !== undefined && (
-          <div className={cn("flex items-center gap-1 mt-2", trendColor)}>
-            <TrendIcon size={14} />
-            <span className="text-xs font-medium">
-              {change > 0 ? "+" : ""}
-              {change}% from last scan
-            </span>
+        {/* Subtitle */}
+        {subtitle && (
+          <p className="text-xs text-white/40 mt-1 leading-snug">{subtitle}</p>
+        )}
+
+        {/* Regulatory badge — shown instead of trend when regulatoryLabel is set */}
+        {regulatoryLabel ? (
+          <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+            {regulatoryLabel.split("·").map((label) => (
+              <span
+                key={label.trim()}
+                className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-brand-500/10 border border-brand-500/20 text-brand-400"
+              >
+                {label.trim()}
+              </span>
+            ))}
           </div>
+        ) : (
+          /* Standard Trend */
+          change !== undefined && (
+            <div className={cn("flex items-center gap-1 mt-2", trendColor)}>
+              <TrendIcon size={14} />
+              <span className="text-xs font-medium">
+                {change > 0 ? "+" : ""}
+                {change}% from last scan
+              </span>
+            </div>
+          )
         )}
       </div>
     </div>

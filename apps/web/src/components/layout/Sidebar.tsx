@@ -11,6 +11,8 @@ import {
   ChevronRight,
   Network,
   Search,
+  Lock,
+  FileBarChart2,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "../../lib/utils";
@@ -35,6 +37,7 @@ const navigation: NavGroup[] = [
     title: "Overview",
     items: [
       { label: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
+      { label: "Executive Report", icon: FileBarChart2, path: "/report" },
     ],
   },
   {
@@ -48,7 +51,8 @@ const navigation: NavGroup[] = [
   {
     title: "Security",
     items: [
-      { label: "Risk Scoring", icon: Shield, path: "/risks" },
+      { label: "Risk Triage", icon: Shield, path: "/risks" },
+      { label: "TLS Intelligence", icon: Lock, path: "/tls-intelligence" },
       { label: "Enrichment", icon: Activity, path: "/enrichment" },
       { label: "Compliance", icon: FileCheck, path: "/compliance" },
     ],

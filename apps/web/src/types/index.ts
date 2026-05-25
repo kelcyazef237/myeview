@@ -63,7 +63,71 @@ export interface RiskFinding {
   evidence: string;
   remediation: string;
   compliance_refs: string[];
+  business_impact?: string;      // executive-facing consequence narrative
+  is_exploitable?: boolean;      // true = real attack opportunity
   created_at: string;
+}
+
+// ── Mye-Score ──
+export interface MyeScore {
+  score: number;              // 0-100, higher = healthier
+  quartile: 1 | 2 | 3 | 4;
+  sector_percentile: number;  // 0-100, % of peers you score higher than
+  sector_label: string;       // e.g. "COBAC-regulated MFIs, CEMAC region"
+  sector_median?: number;     // average score across peer set
+  peer_count: number;
+  trend: "improving" | "stable" | "degrading";
+}
+
+// ── TLS Intelligence ──
+export type TLSDimensionKey =
+  | "expired_certs"
+  | "weak_ciphers"
+  | "downgrade_risk"
+  | "invalid_chain"
+  | "missing_hsts"
+  | "deprecated_protocol"
+  | "wildcard_exposure"
+  | "ct_log_anomaly";
+
+export interface TLSDimension {
+  key: TLSDimensionKey;
+  label: string;
+  status: "pass" | "warn" | "fail" | "unknown";
+  affected_assets: string[];
+  cobac_article: string;
+  cobac_framework: string;
+  finding_summary: string;
+  remediation: string;
+  business_risk: string;     // plain-language risk for CEO
+}
+
+// ── Triage ──
+export interface TriageFilter {
+  mode: "executive" | "full";
+  min_confidence: number;    // 0.0-1.0, findings below this are hidden in executive mode
+  hidden_count: number;
+}
+
+// ── Executive Report ──
+export interface ReportConfig {
+  organization_id: string;
+  scope_domains: string[];
+  include_tls: boolean;
+  include_benchmarks: boolean;
+  include_compliance: boolean;
+  regulatory_frameworks: ("COBAC" | "ANTIC" | "Finance Law 2026")[];
+}
+
+// ── Benchmarking ──
+export interface SectorBenchmark {
+  metric: string;
+  organization_value: number;
+  sector_median: number;
+  sector_p25: number;  // top quartile threshold
+  sector_p75: number;  // bottom quartile threshold
+  unit: string;
+  context_label: string;  // e.g. "External exposure score"
 }
 
 // ── Activity ──
