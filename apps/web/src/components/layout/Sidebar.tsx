@@ -117,13 +117,13 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
     <aside
       className={cn(
         "fixed left-0 top-0 bottom-0 z-40 flex flex-col",
-        "bg-surface-950 border-r border-border-subtle",
-        "transition-all duration-300 ease-out",
+        "border-r transition-all duration-300 ease-out",
         collapsed ? "w-[72px]" : "w-[260px]"
       )}
+      style={{ backgroundColor: "var(--bg-sidebar)", borderColor: "var(--border-subtle)" }}
     >
       {/* Logo */}
-      <div className="flex items-center justify-between h-16 px-4 border-b border-border-subtle">
+      <div className="flex items-center justify-between h-16 px-4 border-b" style={{ borderColor: "var(--border-subtle)" }}>
         <Logo collapsed={collapsed} />
       </div>
 
@@ -133,7 +133,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           <div key={group.title}>
             {/* Group Title */}
             {!collapsed && (
-              <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-white/30 px-3 mb-2">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.1em] px-3 mb-2" style={{ color: "var(--text-muted)" }}>
                 {group.title}
               </p>
             )}
@@ -156,9 +156,10 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
                         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500",
                         active
                           ? "bg-brand-500/10 text-brand-400"
-                          : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]",
+                          : "hover:bg-black/[0.04]",
                         collapsed && "justify-center px-0"
                       )}
+                      style={active ? undefined : { color: "var(--text-tertiary)" }}
                     >
                       {/* Active Indicator */}
                       {active && (
@@ -169,8 +170,9 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
                         size={20}
                         className={cn(
                           "flex-shrink-0 transition-colors duration-200",
-                          active ? "text-brand-400" : "text-white/40 group-hover:text-white/70"
+                          active ? "text-brand-400" : ""
                         )}
+                        style={active ? undefined : { color: "var(--text-muted)" }}
                       />
 
                       {!collapsed && (
@@ -186,9 +188,8 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
                       {/* Tooltip (collapsed mode) */}
                       {collapsed && hoveredItem === item.path && (
-                        <div className="absolute left-full ml-3 px-3 py-1.5 rounded-md bg-surface-700 text-white text-xs font-medium whitespace-nowrap shadow-dropdown z-50 animate-fade-in">
+                        <div className="absolute left-full ml-3 px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap z-50 animate-fade-in" style={{ backgroundColor: "var(--bg-dropdown)", color: "var(--text-primary)", boxShadow: "var(--shadow-dropdown-val)" }}>
                           {item.label}
-                          <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-surface-700" />
                         </div>
                       )}
                     </button>
@@ -201,14 +202,14 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
       </nav>
 
       {/* Collapse Toggle */}
-      <div className="border-t border-border-subtle p-3">
+      <div className="border-t p-3" style={{ borderColor: "var(--border-subtle)" }}>
         <button
           onClick={onToggle}
           className={cn(
             "flex items-center justify-center w-full rounded-lg py-2.5",
-            "text-white/30 hover:text-white/60 hover:bg-white/[0.04]",
-            "transition-all duration-200"
+            "hover:bg-black/[0.04] transition-all duration-200"
           )}
+          style={{ color: "var(--text-muted)" }}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}

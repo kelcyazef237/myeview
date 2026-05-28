@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/myeview/myeview/libs/auth"
 	"github.com/myeview/myeview/libs/db"
 	"github.com/myeview/myeview/libs/events"
 	"github.com/myeview/myeview/services/discovery/internal/config"
@@ -11,6 +12,7 @@ import (
 	"github.com/myeview/myeview/services/discovery/internal/handler"
 	"github.com/myeview/myeview/services/discovery/internal/repository"
 	"github.com/myeview/myeview/services/discovery/internal/service"
+	"os"
 )
 
 func main() {
@@ -56,6 +58,7 @@ func main() {
 	r := gin.Default()
 
 	api := r.Group("/api/v1")
+	api.Use(auth.OrgMiddleware(os.Getenv("JWT_SECRET")))
 	{
 		api.POST("/discovery/start", discoveryHandler.Start)
 		api.GET("/discovery/stream", discoveryHandler.Stream)

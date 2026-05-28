@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/gin-gonic/gin"
+	"github.com/myeview/myeview/libs/auth"
 	"github.com/myeview/myeview/libs/db"
 	"github.com/myeview/myeview/libs/events"
 	"github.com/myeview/myeview/services/compliance/internal/config"
@@ -74,6 +75,7 @@ func main() {
 	compHandler := handler.NewComplianceHandler(ingestSvc, compRepo)
 	r := gin.Default()
 	api := r.Group("/api/v1")
+	api.Use(auth.OrgMiddleware(os.Getenv("JWT_SECRET")))
 	{
 		api.POST("/compliance/ingest", compHandler.Ingest)
 		api.POST("/compliance/seed", compHandler.SeedRegulations)   // Seeds COBAC/ANTIC/Finance Law into pgvector

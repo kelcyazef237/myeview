@@ -12,7 +12,7 @@ export default function DashboardLayout() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
-    <div className="min-h-screen bg-surface-900">
+    <div className="min-h-screen" style={{ backgroundColor: "var(--bg-body)" }}>
       {/* Sidebar */}
       <Sidebar
         collapsed={sidebarCollapsed}

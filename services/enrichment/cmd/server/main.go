@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/gin-gonic/gin"
+	"github.com/myeview/myeview/libs/auth"
 	"github.com/myeview/myeview/libs/db"
 	"github.com/myeview/myeview/libs/events"
 	"github.com/myeview/myeview/services/enrichment/internal/config"
@@ -67,6 +68,7 @@ func main() {
 	enrichHandler := handler.NewEnrichmentHandler(assetRepo)
 	r := gin.Default()
 	api := r.Group("/api/v1")
+	api.Use(auth.OrgMiddleware(os.Getenv("JWT_SECRET")))
 	{
 		api.GET("/enrichment/results", enrichHandler.GetResults)
 	}

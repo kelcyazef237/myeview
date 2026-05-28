@@ -38,7 +38,11 @@ export function useDiscoveryStream(onEvent?: (event: StreamEvent) => void) {
     let retryCount = 0;
 
     const connect = () => {
-      ws.current = new WebSocket(`${protocol}//${host}/api/v1/discovery/stream`);
+      const token = localStorage.getItem("myeview_access_token");
+      const wsUrl = new URL(`${protocol}//${host}/api/v1/discovery/stream`);
+      if (token) wsUrl.searchParams.append("token", token);
+      
+      ws.current = new WebSocket(wsUrl.toString());
 
       ws.current.onopen = () => {
         setIsConnected(true);

@@ -207,6 +207,7 @@ func (s *authService) generateAccessToken(user *domain.User) (string, error) {
 	return auth.GenerateToken(
 		user.ID.String(),
 		string(user.Role),
+		user.OrganizationID.String(),
 		s.cfg.JWT.Secret,
 		s.cfg.JWT.AccessTokenExpiry,
 	)
@@ -216,6 +217,7 @@ func (s *authService) generateRefreshToken(user *domain.User) (string, error) {
 	return auth.GenerateToken(
 		user.ID.String(),
 		string(user.Role),
+		user.OrganizationID.String(),
 		s.cfg.JWT.Secret,
 		s.cfg.JWT.RefreshTokenExpiry,
 	)

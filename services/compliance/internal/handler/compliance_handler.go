@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/myeview/myeview/libs/auth"
 	"github.com/myeview/myeview/services/compliance/internal/repository"
 	"github.com/myeview/myeview/services/compliance/internal/service"
 )
@@ -89,10 +90,7 @@ func regulationNames(regs []struct {
 // Returns all compliance gaps for an organization (legacy endpoint)
 
 func (h *ComplianceHandler) GetGaps(c *gin.Context) {
-	orgID := c.Query("organization_id")
-	if orgID == "" {
-		orgID = c.GetString("user_id")
-	}
+	orgID := auth.GetOrgID(c)
 	if orgID == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "organization_id required"})
 		return
@@ -112,10 +110,7 @@ func (h *ComplianceHandler) GetGaps(c *gin.Context) {
 // This is the primary endpoint for the MYEVIEW Compliance Dashboard.
 
 func (h *ComplianceHandler) GetViolations(c *gin.Context) {
-	orgID := c.Query("organization_id")
-	if orgID == "" {
-		orgID = c.GetString("user_id")
-	}
+	orgID := auth.GetOrgID(c)
 	if orgID == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "organization_id required"})
 		return

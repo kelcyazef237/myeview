@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
+	"github.com/myeview/myeview/libs/auth"
 	"github.com/myeview/myeview/libs/events"
 	"github.com/myeview/myeview/services/discovery/internal/repository"
 	"github.com/myeview/myeview/services/discovery/internal/service"
@@ -54,12 +55,22 @@ func (h *DiscoveryHandler) Start(c *gin.Context) {
 	if req.OrgID != "" {
 		orgID, err = uuid.Parse(req.OrgID)
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid organization_id"})
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid organization_id in request body"})
 			return
 		}
 	} else {
-		// Mock OrgID for testing if not provided
-		orgID = uuid.New()
+		// Extract from JWT / middleware Context
+		contextOrgID := auth.GetOrgID(c)
+		if contextOrgID != "" {
+			orgID, err = uuid.Parse(contextOrgID)
+			if err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "invalid organization_id in auth context"})
+				return
+			}
+		} else {
+			// Mock OrgID for testing if not provided at all
+			orgID = uuid.New()
+		}
 	}
 
 	h.svc.StartDiscovery(orgID, req.Target, req.Mode, req.APIKeys)
@@ -73,10 +84,7 @@ func (h *DiscoveryHandler) Start(c *gin.Context) {
 
 // GetAssets returns all discovered assets for an organization
 func (h *DiscoveryHandler) GetAssets(c *gin.Context) {
-	orgID := c.Query("organization_id")
-	if orgID == "" {
-		orgID = c.GetString("user_id") // Fallback
-	}
+	orgID := auth.GetOrgID(c)
 	if orgID == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "organization_id required"})
 		return
@@ -103,11 +111,18 @@ func (h *DiscoveryHandler) Stream(c *gin.Context) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	userOrgID := auth.GetOrgID(c)
+
 	// Subscribe to discovered events
 	err = h.ebus.Subscribe(ctx, "asset.discovered.>", "", func(data []byte) error {
 		var event events.AssetDiscoveredEvent
 		if err := json.Unmarshal(data, &event); err != nil {
 			return err
+		}
+		
+		// Enforce account isolation
+		if userOrgID != "" && event.OrganizationID != userOrgID {
+			return nil // Skip events not belonging to this user's org
 		}
 		
 		msg := map[string]interface{}{
@@ -134,6 +149,10 @@ func (h *DiscoveryHandler) Stream(c *gin.Context) {
 			return err
 		}
 		
+		if userOrgID != "" && event.OrganizationID != userOrgID {
+			return nil
+		}
+		
 		msg := map[string]interface{}{
 			"type": "asset_verified",
 			"data": event,
@@ -158,6 +177,10 @@ func (h *DiscoveryHandler) Stream(c *gin.Context) {
 			return err
 		}
 		
+		if userOrgID != "" && event.OrganizationID != userOrgID {
+			return nil
+		}
+		
 		msg := map[string]interface{}{
 			"type": "asset_enriched",
 			"data": event,
@@ -180,6 +203,10 @@ func (h *DiscoveryHandler) Stream(c *gin.Context) {
 		var event events.RiskScoredEvent
 		if err := json.Unmarshal(data, &event); err != nil {
 			return err
+		}
+		
+		if userOrgID != "" && event.OrganizationID != userOrgID {
+			return nil
 		}
 		
 		msg := map[string]interface{}{

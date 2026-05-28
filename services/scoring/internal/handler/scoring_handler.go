@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/myeview/myeview/libs/auth"
 	"github.com/myeview/myeview/services/scoring/internal/repository"
 )
 
@@ -16,7 +17,7 @@ func NewScoringHandler(repo repository.AssetRepository) *ScoringHandler {
 }
 
 func (h *ScoringHandler) GetFindings(c *gin.Context) {
-	orgID := c.Query("organization_id")
+	orgID := auth.GetOrgID(c)
 	if orgID == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "organization_id required"})
 		return

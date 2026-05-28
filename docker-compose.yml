@@ -132,6 +132,7 @@ services:
       DB_PASSWORD: myeview_password
       DB_NAME: myeview
       DB_SSL_MODE: disable
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
       SHODAN_API_KEY: ${SHODAN_API_KEY:-}
       CENSYS_API_ID: ${CENSYS_API_ID:-censys_NTmvNPQq}
       CENSYS_SECRET: ${CENSYS_SECRET:-MZ5mXJWk2DExR4xoakFBUfdY}
@@ -160,6 +161,7 @@ services:
       DB_PASSWORD: myeview_password
       DB_NAME: myeview
       DB_SSL_MODE: disable
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
     depends_on:
       postgres:
         condition: service_healthy
@@ -185,6 +187,7 @@ services:
       DB_PASSWORD: myeview_password
       DB_NAME: myeview
       DB_SSL_MODE: disable
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
     depends_on:
       postgres:
         condition: service_healthy
@@ -210,6 +213,7 @@ services:
       DB_PASSWORD: myeview_password
       DB_NAME: myeview
       DB_SSL_MODE: disable
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
     depends_on:
       postgres:
         condition: service_healthy
@@ -235,6 +239,7 @@ services:
       DB_PASSWORD: myeview_password
       DB_NAME: myeview
       DB_SSL_MODE: disable
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
     depends_on:
       postgres:
         condition: service_healthy
@@ -262,6 +267,7 @@ services:
       DB_PASSWORD: myeview_password
       DB_NAME: myeview
       DB_SSL_MODE: disable
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
       DASHSCOPE_API_KEY: ${DASHSCOPE_API_KEY:-}   # Qwen/Alibaba Cloud (primary)
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}          # OpenAI fallback
     depends_on:

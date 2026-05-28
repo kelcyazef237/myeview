@@ -41,7 +41,7 @@ export default function TopBar() {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-6 bg-surface-900/80 backdrop-blur-xl border-b border-border-subtle">
+    <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-6 backdrop-blur-xl border-b" style={{ backgroundColor: "var(--bg-topbar)", borderColor: "var(--border-subtle)" }}>
       {/* Left: Search */}
       <div className="flex items-center flex-1 max-w-md">
         <div
@@ -53,15 +53,16 @@ export default function TopBar() {
               : "border-transparent hover:border-border-subtle"
           )}
         >
-          <Search size={16} className="text-white/30 flex-shrink-0" />
+          <Search size={16} className="flex-shrink-0" style={{ color: "var(--text-muted)" }} />
           <input
             type="text"
             placeholder="Search assets, domains, IPs..."
-            className="flex-1 bg-transparent text-sm text-white/80 placeholder:text-white/25 outline-none"
+            className="flex-1 bg-transparent text-sm outline-none"
+            style={{ color: "var(--text-secondary)"}}
             onFocus={() => setSearchFocused(true)}
             onBlur={() => setSearchFocused(false)}
           />
-          <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-white/[0.06] text-[10px] text-white/30 font-mono">
+          <kbd className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono" style={{ background: "var(--bg-card)", color: "var(--text-muted)" }}>
             ⌘K
           </kbd>
         </div>
@@ -89,7 +90,7 @@ export default function TopBar() {
         </button>
 
         {/* Divider */}
-        <div className="w-px h-6 bg-border-subtle mx-2" />
+        <div className="w-px h-6 mx-2" style={{ backgroundColor: "var(--border-subtle)" }} />
 
         {/* User Menu */}
         <div ref={menuRef} className="relative">
@@ -106,10 +107,10 @@ export default function TopBar() {
               {user?.name?.charAt(0)?.toUpperCase() || "U"}
             </div>
             <div className="hidden sm:block text-left">
-              <p className="text-sm font-medium text-white/80 leading-none">
+              <p className="text-sm font-medium leading-none" style={{ color: "var(--text-primary)" }}>
                 {user?.name || "User"}
               </p>
-              <p className="text-[11px] text-white/35 leading-none mt-0.5">
+              <p className="text-[11px] leading-none mt-0.5" style={{ color: "var(--text-muted)" }}>
                 {user?.role || "analyst"}
               </p>
             </div>
@@ -124,10 +125,10 @@ export default function TopBar() {
 
           {/* Dropdown */}
           {userMenuOpen && (
-            <div className="absolute right-0 top-full mt-2 w-52 rounded-xl bg-surface-800 border border-border-default shadow-dropdown animate-fade-in overflow-hidden">
-              <div className="px-4 py-3 border-b border-border-subtle">
-                <p className="text-sm font-medium text-white/80">{user?.name || "User"}</p>
-                <p className="text-xs text-white/40 mt-0.5">{user?.email || "user@example.com"}</p>
+            <div className="absolute right-0 top-full mt-2 w-52 rounded-xl border animate-fade-in overflow-hidden" style={{ backgroundColor: "var(--bg-dropdown)", borderColor: "var(--border-default)", boxShadow: "var(--shadow-dropdown-val)" }}>
+              <div className="px-4 py-3 border-b" style={{ borderColor: "var(--border-subtle)" }}>
+                <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>{user?.name || "User"}</p>
+                <p className="text-xs mt-0.5" style={{ color: "var(--text-tertiary)" }}>{user?.email || "user@example.com"}</p>
               </div>
               <div className="p-1.5">
                 <button

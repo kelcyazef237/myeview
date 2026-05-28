@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/myeview/myeview/libs/auth"
 	"github.com/myeview/myeview/services/enrichment/internal/repository"
 )
 
@@ -16,7 +17,7 @@ func NewEnrichmentHandler(repo repository.AssetRepository) *EnrichmentHandler {
 }
 
 func (h *EnrichmentHandler) GetResults(c *gin.Context) {
-	orgID := c.Query("organization_id")
+	orgID := auth.GetOrgID(c)
 	if orgID == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "organization_id required"})
 		return

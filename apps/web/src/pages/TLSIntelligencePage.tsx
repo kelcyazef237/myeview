@@ -167,7 +167,7 @@ function DimensionCard({ dimension }: { dimension: TLSDimension }) {
           ? "bg-cyber-red/[0.04]"
           : dimension.status === "warn"
             ? "bg-cyber-amber/[0.03]"
-            : "bg-white/[0.02]"
+            : "theme-bg-card"
       )}
     >
       {/* Header */}
@@ -183,7 +183,7 @@ function DimensionCard({ dimension }: { dimension: TLSDimension }) {
 
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <p className="text-sm font-semibold text-white">{dimension.label}</p>
+              <p className="text-sm font-semibold theme-text">{dimension.label}</p>
               {/* Pulse for fails */}
               {dimension.status === "fail" && (
                 <span className="relative flex h-2 w-2">
@@ -192,7 +192,7 @@ function DimensionCard({ dimension }: { dimension: TLSDimension }) {
                 </span>
               )}
             </div>
-            <p className="text-xs text-white/40 mt-0.5 truncate">
+            <p className="text-xs theme-text-tertiary mt-0.5 truncate">
               {dimension.affected_assets.length > 0
                 ? `${dimension.affected_assets.length} asset${dimension.affected_assets.length !== 1 ? "s" : ""} affected`
                 : dimension.status === "pass"
@@ -212,42 +212,45 @@ function DimensionCard({ dimension }: { dimension: TLSDimension }) {
           <span className={cn("text-[11px] font-bold uppercase tracking-wide px-3 py-1 rounded-full border", cfg.bg, cfg.color, cfg.border)}>
             {cfg.label}
           </span>
-          {open ? <ChevronUp className="w-4 h-4 text-white/30" /> : <ChevronDown className="w-4 h-4 text-white/30" />}
+          {open ? <ChevronUp className="w-4 h-4 theme-text-muted" /> : <ChevronDown className="w-4 h-4 theme-text-muted" />}
         </div>
       </button>
 
       {/* Expanded detail */}
       {open && (
-        <div className="border-t border-white/[0.06] px-5 pb-5 pt-4 space-y-4 animate-fade-in">
+        <div className="border-t theme-border-subtle px-5 pb-5 pt-4 space-y-4 animate-fade-in">
           {/* Business risk */}
           <div className={cn("p-4 rounded-xl border", cfg.bg, cfg.border)}>
             <h4 className={cn("text-[11px] font-semibold uppercase tracking-widest mb-2 flex items-center gap-1.5", cfg.color)}>
               <Eye className="w-3.5 h-3.5" /> Business Risk
             </h4>
-            <p className="text-sm text-white/80 leading-relaxed">{dimension.business_risk}</p>
+            <p className="text-sm theme-text-secondary leading-relaxed">{dimension.business_risk}</p>
           </div>
 
           {/* Finding summary */}
           {dimension.finding_summary && (
             <div>
-              <h4 className="text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-2">
+              <h4 className="text-[11px] font-semibold theme-text-muted uppercase tracking-widest mb-2">
                 Technical Finding
               </h4>
-              <p className="text-sm text-white/65 leading-relaxed font-mono text-xs">{dimension.finding_summary}</p>
+              <p className="text-sm theme-text-secondary leading-relaxed font-mono text-xs">{dimension.finding_summary}</p>
             </div>
           )}
 
           {/* Affected assets */}
           {dimension.affected_assets.length > 0 && (
             <div>
-              <h4 className="text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                <Network className="w-3.5 h-3.5" /> Affected Assets
+              <h4 className="text-[11px] font-semibold theme-text-muted uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                <Network className="w-3.5 h-3.5" /> Affected Domains / IPs
               </h4>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-col gap-2">
                 {dimension.affected_assets.map((asset, i) => (
-                  <span key={i} className="text-xs font-mono px-2.5 py-1 rounded bg-surface-800 border border-white/8 text-white/60">
-                    {asset}
-                  </span>
+                  <div key={i} className="flex items-center gap-3 px-3 py-2 rounded-lg theme-bg-input theme-border-subtle">
+                    <span className="text-xs font-mono font-semibold theme-text">{asset}</span>
+                    <span className="text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full badge-critical border">
+                      Flagged
+                    </span>
+                  </div>
                 ))}
               </div>
             </div>
@@ -255,8 +258,8 @@ function DimensionCard({ dimension }: { dimension: TLSDimension }) {
 
           {/* Regulatory citation */}
           <div className="flex items-center gap-2 pt-1">
-            <Gavel className="w-3.5 h-3.5 text-white/30 flex-shrink-0" />
-            <span className="text-xs text-white/40">Regulatory obligation:</span>
+            <Gavel className="w-3.5 h-3.5 theme-text-muted flex-shrink-0" />
+            <span className="text-xs theme-text-tertiary">Regulatory obligation:</span>
             <span className={cn("text-xs font-semibold px-2 py-0.5 rounded border", frameworkClass)}>
               {dimension.cobac_article}
             </span>
@@ -267,7 +270,7 @@ function DimensionCard({ dimension }: { dimension: TLSDimension }) {
             <h4 className="text-[11px] font-semibold text-emerald-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
               <CheckCircle2 className="w-3.5 h-3.5" /> Recommended Action
             </h4>
-            <p className="text-sm text-white/75 leading-relaxed">{dimension.remediation}</p>
+            <p className="text-sm theme-text-secondary leading-relaxed">{dimension.remediation}</p>
           </div>
         </div>
       )}
@@ -293,7 +296,7 @@ function SummaryStats({ dimensions }: { dimensions: TLSDimension[] }) {
         <div key={label} className={cn("rounded-xl border p-4 flex flex-col items-center gap-2", bg, border)}>
           <Icon className={cn("w-5 h-5", color)} />
           <span className={cn("text-2xl font-bold tabular-nums", color)}>{count}</span>
-          <span className="text-[10px] uppercase tracking-wider text-white/40 font-semibold text-center">{label}</span>
+          <span className="text-[10px] uppercase tracking-wider theme-text-tertiary font-semibold text-center">{label}</span>
         </div>
       ))}
     </div>
@@ -303,6 +306,7 @@ function SummaryStats({ dimensions }: { dimensions: TLSDimension[] }) {
 // ── Main Page ────────────────────────────────────────────────────────────────
 export default function TLSIntelligencePage() {
   const [dimensions, setDimensions] = useState<TLSDimension[]>([]);
+  const [assets, setAssets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
   const { user } = useAuthStore();
@@ -321,13 +325,23 @@ export default function TLSIntelligencePage() {
     setLoading(true);
     try {
       // Pull from scoring findings, filter for TLS-relevant findings
-      const res = await fetch(`/api/v1/scoring/findings?organization_id=${user?.organization_id}`);
-      if (res.ok) {
-        const allFindings = (await res.json()) || [];
+      const [scoringRes, assetsRes] = await Promise.all([
+        fetch(`/api/v1/scoring/findings?organization_id=${user?.organization_id}`),
+        fetch(`/api/v1/discovery/assets?organization_id=${user?.organization_id}`)
+      ]);
+      
+      if (scoringRes.ok) {
+        const allFindings = (await scoringRes.json()) || [];
         setDimensions(buildDimensions(allFindings));
       } else {
-        // Render schema with unknown status when no data
         setDimensions(buildDimensions([]));
+      }
+
+      if (assetsRes.ok) {
+        const allAssets = (await assetsRes.json()) || [];
+        setAssets(allAssets);
+      } else {
+        setAssets([]);
       }
     } catch {
       setDimensions(buildDimensions([]));
@@ -353,22 +367,22 @@ export default function TLSIntelligencePage() {
       {/* ── Header ──────────────────────────────────────────────────── */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2.5">
+          <h1 className="text-2xl font-bold theme-text flex items-center gap-2.5">
             <Lock className="w-6 h-6 text-brand-500" />
             TLS/SSL Certificate Intelligence
           </h1>
-          <p className="text-sm text-white/40 mt-1">
+          <p className="text-sm theme-text-tertiary mt-1">
             8-dimensional certificate posture · Mapped to COBAC Circular No. 000002, ANTIC, and Finance Law 2026
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-white/25 hidden sm:block">
+          <span className="text-[10px] theme-text-muted hidden sm:block">
             Refreshed {lastRefreshed.toLocaleTimeString()}
           </span>
           <button
             onClick={fetchData}
             disabled={loading}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm text-white/50 bg-surface-800 border border-white/5 rounded-lg hover:border-white/10 hover:text-white/70 transition-colors disabled:opacity-40"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm theme-text-secondary theme-bg-card border theme-border-subtle rounded-lg hover:theme-border-default transition-colors disabled:opacity-40"
           >
             <RefreshCw className={cn("w-3.5 h-3.5", loading && "animate-spin")} />
             Refresh
@@ -384,7 +398,7 @@ export default function TLSIntelligencePage() {
             <p className="text-sm font-semibold text-cyber-red">
               {criticalCount} critical TLS issue{criticalCount !== 1 ? "s" : ""} detected
             </p>
-            <p className="text-xs text-white/50 mt-0.5">
+            <p className="text-xs theme-text-secondary mt-0.5">
               These configurations constitute direct violations of COBAC Circular No. 000002 encryption standards and require immediate remediation.
             </p>
           </div>
@@ -416,11 +430,64 @@ export default function TLSIntelligencePage() {
             .map((dim) => (
               <DimensionCard key={dim.key} dimension={dim} />
             ))}
+            
+          {/* ── TLS Asset Overview Table ────────────────────────────────────── */}
+          <div className="mt-8 pt-6 border-t theme-border-subtle">
+            <h2 className="text-lg font-bold theme-text mb-4">Domain Certificates Overview</h2>
+            <div className="theme-bg-card rounded-2xl border theme-border-subtle overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm whitespace-nowrap">
+                  <thead className="theme-bg-body border-b theme-border-subtle">
+                    <tr>
+                      <th className="px-6 py-4 font-medium theme-text-secondary">Domain / IP</th>
+                      <th className="px-6 py-4 font-medium theme-text-secondary">TLS Status</th>
+                      <th className="px-6 py-4 font-medium theme-text-secondary">Issuer</th>
+                      <th className="px-6 py-4 font-medium theme-text-secondary">Expiry Date</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y theme-border-subtle">
+                    {assets.length === 0 ? (
+                      <tr>
+                        <td colSpan={4} className="px-6 py-8 text-center theme-text-tertiary text-sm">
+                          No assets found. Run a discovery scan first.
+                        </td>
+                      </tr>
+                    ) : (
+                      assets.map((asset) => (
+                        <tr key={asset.id} className="hover:bg-black/[0.02] transition-colors">
+                          <td className="px-6 py-4 font-medium theme-text">{asset.name}</td>
+                          <td className="px-6 py-4">
+                            {asset.tls_valid === true ? (
+                              <span className="px-2 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider badge-low">Valid</span>
+                            ) : asset.tls_valid === false && asset.tls_cert_issuer ? (
+                              <span className="px-2 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider badge-critical">Invalid</span>
+                            ) : (
+                              <span className="px-2 py-1 rounded-full text-[10px] uppercase font-bold tracking-wider theme-bg-input theme-text-muted theme-border-subtle border">N/A</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 text-xs theme-text-secondary max-w-[200px] truncate" title={asset.tls_cert_issuer || "N/A"}>
+                            {asset.tls_cert_issuer ? asset.tls_cert_issuer.split(",")[0].replace("CN=", "") : "-"}
+                          </td>
+                          <td className="px-6 py-4 text-xs font-mono">
+                            {asset.tls_cert_expiry && asset.tls_cert_expiry !== "0001-01-01T00:00:00Z" ? (
+                              <span className={new Date(asset.tls_cert_expiry) < new Date() ? "text-cyber-red font-bold" : "theme-text-secondary"}>
+                                {new Date(asset.tls_cert_expiry).toLocaleDateString()}
+                              </span>
+                            ) : "-"}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
       {/* ── Footer note ──────────────────────────────────────────────── */}
-      <div className="text-xs text-white/20 text-center pt-2">
+      <div className="text-xs theme-text-muted text-center pt-2">
         TLS data is derived from passive intelligence and semi-active validation (TLS handshakes, certificate retrieval). No intrusive scanning is performed.
       </div>
     </div>

@@ -8,22 +8,37 @@ interface ThemeState {
   setTheme: (theme: Theme) => void;
 }
 
-export const useThemeStore = create<ThemeState>((set) => ({
-  theme: (localStorage.getItem("myeview_theme") as Theme) || "dark",
+function applyThemeToDOM(theme: Theme) {
+  const root = document.documentElement;
+  root.classList.remove("dark", "light");
+  root.classList.add(theme);
+}
 
-  toggleTheme: () =>
-    set((state) => {
-      const next = state.theme === "dark" ? "light" : "dark";
-      localStorage.setItem("myeview_theme", next);
-      document.documentElement.classList.toggle("dark", next === "dark");
-      document.documentElement.classList.toggle("light", next === "light");
-      return { theme: next };
-    }),
+export const useThemeStore = create<ThemeState>((set) => {
+  // Initialize theme from localStorage on store creation
+  const savedTheme = (typeof window !== "undefined" ? localStorage.getItem("myeview_theme") : null) as Theme | null;
+  const initialTheme: Theme = savedTheme || "dark";
 
-  setTheme: (theme) => {
-    localStorage.setItem("myeview_theme", theme);
-    document.documentElement.classList.toggle("dark", theme === "dark");
-    document.documentElement.classList.toggle("light", theme === "light");
-    set({ theme });
-  },
-}));
+  // Apply immediately so the first render uses the correct theme
+  if (typeof window !== "undefined") {
+    applyThemeToDOM(initialTheme);
+  }
+
+  return {
+    theme: initialTheme,
+
+    toggleTheme: () =>
+      set((state) => {
+        const next: Theme = state.theme === "dark" ? "light" : "dark";
+        localStorage.setItem("myeview_theme", next);
+        applyThemeToDOM(next);
+        return { theme: next };
+      }),
+
+    setTheme: (theme) => {
+      localStorage.setItem("myeview_theme", theme);
+      applyThemeToDOM(theme);
+      set({ theme });
+    },
+  };
+});

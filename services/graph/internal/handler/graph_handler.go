@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/myeview/myeview/libs/auth"
 	"github.com/myeview/myeview/services/graph/internal/service"
 )
 
@@ -16,12 +17,7 @@ func NewGraphHandler(svc *service.GraphService) *GraphHandler {
 }
 
 func (h *GraphHandler) GetGraph(c *gin.Context) {
-	// Normally orgID comes from JWT middleware
-	orgID := c.Query("organization_id")
-	if orgID == "" {
-		// Fallback for dev testing
-		orgID = c.GetString("user_id") 
-	}
+	orgID := auth.GetOrgID(c)
 	if orgID == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "organization_id required"})
 		return
