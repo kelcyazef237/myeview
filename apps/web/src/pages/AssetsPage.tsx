@@ -32,22 +32,22 @@ export default function AssetsPage() {
             <Globe className="w-6 h-6 text-brand-500" />
             Asset Inventory
           </h1>
-          <p className="text-sm text-white/40 mt-1">
+          <p className="text-sm theme-text-muted mt-1">
             Comprehensive view of all discovered public-facing assets.
           </p>
         </div>
         <div className="flex items-center gap-2">
            <div className="relative">
-             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-             <input type="text" placeholder="Search assets..." className="bg-surface-800 border border-white/5 rounded-lg pl-9 pr-4 py-2 text-sm text-white w-64 focus:border-brand-500/50 outline-none" />
+             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 theme-text-muted" />
+             <input type="text" placeholder="Search assets..." className="theme-bg-card border theme-border-subtle rounded-lg pl-9 pr-4 py-2 text-sm theme-text focus:border-brand-500/50 outline-none" />
            </div>
-           <button className="flex items-center gap-2 px-3 py-2 bg-surface-800 border border-white/5 rounded-lg text-white/70 hover:text-white transition-colors text-sm">
+           <button className="flex items-center gap-2 px-3 py-2 theme-bg-card border theme-border-subtle rounded-lg theme-text-secondary hover:theme-text transition-colors text-sm">
              <Filter className="w-4 h-4" /> Filter
            </button>
         </div>
       </div>
 
-      <div className="bg-surface-800/50 rounded-2xl border border-white/5 overflow-hidden">
+      <div className="theme-bg-card rounded-2xl border theme-border-subtle overflow-hidden">
         {loading ? (
           <div className="p-12 flex justify-center">
             <div className="w-8 h-8 border-2 border-brand-500/30 border-t-brand-500 rounded-full animate-spin" />
@@ -59,7 +59,7 @@ export default function AssetsPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm whitespace-nowrap">
-              <thead className="bg-surface-900/50 border-b border-white/5 text-white/50">
+              <thead className="theme-bg-body border-b theme-border-subtle">
                 <tr>
                   <th className="px-6 py-4 font-medium theme-text-secondary">Asset Name</th>
                   <th className="px-6 py-4 font-medium theme-text-secondary">Type</th>
@@ -73,9 +73,9 @@ export default function AssetsPage() {
               </thead>
               <tbody className="divide-y theme-border-subtle">
                 {assets.map((asset) => (
-                  <tr key={asset.id} className="hover:bg-white/[0.02] transition-colors">
-                    <td className="px-6 py-4 text-white font-medium">{asset.name}</td>
-                    <td className="px-6 py-4 text-white/70 capitalize">{asset.type}</td>
+                  <tr key={asset.id} className="hover:theme-bg-card transition-colors">
+                    <td className="px-6 py-4 theme-text font-medium">{asset.name}</td>
+                    <td className="px-6 py-4 theme-text-secondary capitalize">{asset.type}</td>
                     <td className="px-6 py-4">
                       {asset.risk_score > 0 ? (
                         <span className="flex items-center gap-1.5 text-red-400">

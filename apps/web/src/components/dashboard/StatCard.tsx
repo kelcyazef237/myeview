@@ -108,7 +108,7 @@ export default function StatCard({
 
   const trendColor =
     change === undefined || change === 0
-      ? "text-white/30"
+      ? "theme-text-muted"
       : change > 0
         ? "text-cyber-green"
         : "text-cyber-red";
@@ -133,7 +133,7 @@ export default function StatCard({
       <div className="relative z-10">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
-          <span className="text-xs font-medium uppercase tracking-wider text-white/40">
+          <span className="text-xs font-medium uppercase tracking-wider theme-text-tertiary">
             {title}
           </span>
           <div
@@ -148,7 +148,7 @@ export default function StatCard({
 
         {/* Value */}
         <div className="flex items-end gap-2">
-          <span className="stat-number text-3xl font-bold text-white">
+          <span className="stat-number text-3xl font-bold theme-text">
             {formatCompact(displayValue)}
             {suffix}
           </span>
@@ -156,7 +156,7 @@ export default function StatCard({
 
         {/* Subtitle */}
         {subtitle && (
-          <p className="text-xs text-white/40 mt-1 leading-snug">{subtitle}</p>
+          <p className="text-xs theme-text-tertiary mt-1 leading-snug">{subtitle}</p>
         )}
 
         {/* Regulatory badge — shown instead of trend when regulatoryLabel is set */}

@@ -121,12 +121,12 @@ function ViolationCard({ violation }: { violation: ComplianceViolation }) {
               </div>
 
               {/* Asset name */}
-              <h3 className="text-sm font-semibold text-white truncate">
+              <h3 className="text-sm font-semibold theme-text truncate">
                 {violation.asset_name}
               </h3>
 
               {/* Law name */}
-              <p className="text-xs text-white/40 mt-0.5 flex items-center gap-1">
+              <p className="text-xs theme-text-tertiary mt-0.5 flex items-center gap-1">
                 <Gavel className="w-3 h-3" />
                 {violation.law_name}
                 {violation.article && ` — ${violation.article}`}
@@ -142,21 +142,21 @@ function ViolationCard({ violation }: { violation: ComplianceViolation }) {
             <span className={cn(
               "text-[10px] uppercase px-2 py-0.5 rounded border",
               violation.status === "open"
-                ? "text-white/40 border-white/10"
+                ? "theme-text-muted theme-border-subtle"
                 : "text-emerald-400 border-emerald-500/30 bg-emerald-500/10"
             )}>
               {violation.status}
             </span>
             {expanded
-              ? <ChevronUp className="w-4 h-4 text-white/30" />
-              : <ChevronDown className="w-4 h-4 text-white/30" />}
+              ? <ChevronUp className="w-4 h-4 theme-text-muted" />
+              : <ChevronDown className="w-4 h-4 theme-text-muted" />}
           </div>
         </div>
 
         {/* Business Stake — always visible, this is the CEO-level message */}
         {violation.business_stake && (
-          <div className="mt-3 ml-5 pl-3 border-l-2 border-white/10">
-            <p className="text-sm text-white/70 italic leading-relaxed">
+          <div className="mt-3 ml-5 pl-3 border-l-2 theme-border-subtle">
+            <p className="text-sm theme-text-secondary italic leading-relaxed">
               "{violation.business_stake}"
             </p>
           </div>
@@ -165,23 +165,23 @@ function ViolationCard({ violation }: { violation: ComplianceViolation }) {
 
       {/* Expanded Detail */}
       {expanded && (
-        <div className="border-t border-white/[0.06] px-5 pb-5 pt-4 space-y-4 animate-fade-in">
+        <div className="border-t theme-border-subtle px-5 pb-5 pt-4 space-y-4 animate-fade-in">
           {/* Technical Evidence */}
           <div>
-            <h4 className="text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-2">
+            <h4 className="text-[11px] font-semibold theme-text-muted uppercase tracking-widest mb-2">
               Technical Evidence
             </h4>
-            <p className="text-sm text-white/80 bg-surface-900/60 rounded-lg p-3 border border-white/5 font-mono leading-relaxed">
+            <p className="text-sm theme-text-secondary theme-bg-body rounded-lg p-3 border theme-border-subtle font-mono leading-relaxed">
               {violation.evidence}
             </p>
           </div>
 
           {/* Mandated State */}
           <div>
-            <h4 className="text-[11px] font-semibold text-white/50 uppercase tracking-widest mb-2">
+            <h4 className="text-[11px] font-semibold theme-text-muted uppercase tracking-widest mb-2">
               What the Law Requires
             </h4>
-            <p className="text-sm text-white/70 leading-relaxed">
+            <p className="text-sm theme-text-secondary leading-relaxed">
               {violation.violated_requirement}
             </p>
           </div>
@@ -198,7 +198,7 @@ function ViolationCard({ violation }: { violation: ComplianceViolation }) {
 
           {/* Footer meta */}
           <div className="flex items-center justify-between pt-1">
-            <div className="flex items-center gap-1.5 text-[11px] text-white/30">
+            <div className="flex items-center gap-1.5 text-[11px] theme-text-muted">
               <Clock className="w-3 h-3" />
               Detected {new Date(violation.created_at).toLocaleString()}
             </div>
@@ -265,18 +265,18 @@ export default function CompliancePage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2.5">
+          <h1 className="text-2xl font-bold theme-text flex items-center gap-2.5">
             <Shield className="w-6 h-6 text-brand-500" />
             Regulatory Intelligence
           </h1>
-          <p className="text-sm text-white/40 mt-1">
+          <p className="text-sm theme-text-tertiary mt-1">
             Technical vulnerabilities mapped to COBAC · ANTIC · Finance Law violations
           </p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={fetchViolations}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm text-white/60 bg-surface-800 border border-white/5 rounded-lg hover:border-white/10 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-2 text-sm theme-text-secondary theme-bg-card border theme-border-subtle rounded-lg hover:theme-border-default transition-colors"
           >
             <RefreshCw className="w-3.5 h-3.5" /> Refresh
           </button>
@@ -308,13 +308,13 @@ export default function CompliancePage() {
               <div className={cn("text-2xl font-bold tabular-nums", cfg.summaryText)}>
                 {summary[level]}
               </div>
-              <div className="text-xs text-white/50 mt-0.5 font-medium">{level}</div>
+              <div className="text-xs theme-text-tertiary mt-0.5 font-medium">{level}</div>
             </button>
           );
         })}
-        <div className="rounded-xl border border-white/5 bg-surface-800/50 p-4 text-left">
-          <div className="text-2xl font-bold tabular-nums text-white">{summary.total}</div>
-          <div className="text-xs text-white/50 mt-0.5 font-medium">Total Violations</div>
+        <div className="rounded-xl border theme-border-subtle theme-bg-card p-4 text-left">
+          <div className="text-2xl font-bold tabular-nums theme-text">{summary.total}</div>
+          <div className="text-xs theme-text-tertiary mt-0.5 font-medium">Total Violations</div>
         </div>
       </div>
 
@@ -329,7 +329,7 @@ export default function CompliancePage() {
                 "px-3 py-1.5 text-xs rounded-lg border transition-colors",
                 filter === f
                   ? "bg-brand-600/20 border-brand-500/30 text-brand-300"
-                  : "bg-surface-800/50 border-white/5 text-white/50 hover:text-white/70"
+                  : "theme-bg-card border-theme-border-subtle theme-text-secondary hover:theme-text"
               )}
             >
               {f}
@@ -344,16 +344,16 @@ export default function CompliancePage() {
           <div className="w-8 h-8 border-2 border-brand-500/30 border-t-brand-500 rounded-full animate-spin" />
         </div>
       ) : filtered.length === 0 ? (
-        <div className="bg-surface-800/50 rounded-2xl border border-white/5 p-16 flex flex-col items-center justify-center text-center">
+        <div className="theme-bg-card rounded-2xl border theme-border-subtle p-16 flex flex-col items-center justify-center text-center">
           {violations.length === 0 ? (
             <>
               <ShieldCheck className="w-16 h-16 text-emerald-500/50 mb-4" />
-              <h3 className="text-lg font-semibold text-white mb-2">No Violations Detected</h3>
-              <p className="text-sm text-white/40 max-w-md leading-relaxed">
+              <h3 className="text-lg font-semibold theme-text mb-2">No Violations Detected</h3>
+              <p className="text-sm theme-text-tertiary max-w-md leading-relaxed">
                 Run a discovery scan to automatically cross-reference your infrastructure against
                 COBAC Circular No. 000002, ANTIC Law 2010/012, and Finance Law 2026 Article 17c.
               </p>
-              <div className="mt-4 text-xs text-white/25 flex items-center gap-1.5">
+              <div className="mt-4 text-xs theme-text-muted flex items-center gap-1.5">
                 <FileWarning className="w-3.5 h-3.5" />
                 Tip: Seed the regulations database first using the button above.
               </div>
@@ -361,7 +361,7 @@ export default function CompliancePage() {
           ) : (
             <>
               <ShieldCheck className="w-12 h-12 text-emerald-500/50 mb-3" />
-              <h3 className="text-base font-semibold text-white mb-1">No {filter} violations</h3>
+              <h3 className="text-base font-semibold theme-text mb-1">No {filter} violations</h3>
               <button onClick={() => setFilter("ALL")} className="text-sm text-brand-400 mt-2">
                 Show all violations
               </button>

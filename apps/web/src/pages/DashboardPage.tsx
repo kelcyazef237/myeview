@@ -148,7 +148,7 @@ export default function DashboardPage() {
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-white">Executive Dashboard</h1>
+            <h1 className="text-2xl font-bold theme-text">Executive Dashboard</h1>
             {isConnected ? (
               <span className="flex items-center gap-1.5 text-xs font-medium bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-md border border-emerald-500/20">
                 <Wifi className="w-3.5 h-3.5" /> Live
@@ -159,7 +159,7 @@ export default function DashboardPage() {
               </span>
             )}
           </div>
-          <p className="text-sm text-white/40 mt-1">
+          <p className="text-sm theme-text-tertiary mt-1">
             Attack surface overview · Exploitable findings only · COBAC-compliant view
           </p>
         </div>
@@ -176,14 +176,14 @@ export default function DashboardPage() {
           </button>
 
           {/* Discovery Control */}
-          <div className="flex flex-wrap items-center gap-3 bg-surface-800/40 p-2 rounded-xl border border-white/5 backdrop-blur-sm">
-            <div className="flex bg-surface-900 rounded-lg p-1 border border-white/5">
+          <div className="flex flex-wrap items-center gap-3 theme-bg-card p-2 rounded-xl border theme-border-subtle backdrop-blur-sm">
+            <div className="flex theme-bg-body rounded-lg p-1 border theme-border-subtle">
               <button
                 onClick={() => setMode("base")}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
                   mode === "base"
                     ? "bg-brand-500 text-white shadow-lg shadow-brand-500/20"
-                    : "text-white/40 hover:text-white"
+                    : "theme-text-muted hover:theme-text"
                 }`}
               >
                 <Zap className="w-3.5 h-3.5" />
@@ -194,7 +194,7 @@ export default function DashboardPage() {
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
                   mode === "advanced"
                     ? "bg-purple-500 text-white shadow-lg shadow-purple-500/20"
-                    : "text-white/40 hover:text-white"
+                    : "theme-text-muted hover:theme-text"
                 }`}
               >
                 <ShieldAlert className="w-3.5 h-3.5" />
@@ -202,15 +202,15 @@ export default function DashboardPage() {
               </button>
             </div>
 
-            <div className="h-8 w-px bg-white/10 hidden md:block" />
+            <div className="h-8 w-px theme-border-subtle hidden md:block" />
 
             <div className="flex items-center gap-2 flex-1 md:flex-none">
               <div className="relative flex-1 md:w-64">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 theme-text-muted" />
                 <input
                   type="text"
                   placeholder="Enter domain (e.g. example.com)"
-                  className="bg-surface-900 border border-white/5 focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/20 text-sm text-white placeholder:text-white/20 pl-9 pr-4 py-2 w-full rounded-lg outline-none transition-all"
+                  className="theme-bg-body border theme-border-input focus:border-brand-500/50 focus:ring-1 focus:ring-brand-500/20 text-sm theme-text placeholder:theme-text-muted pl-9 pr-4 py-2 w-full rounded-lg outline-none transition-all"
                   value={target}
                   onChange={(e) => setTarget(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleStartDiscovery()}
